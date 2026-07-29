@@ -119,7 +119,7 @@ if view == 'Daily':
 else:
     year_tab = st.tabs([
             "Year",
-            ]) 
+            ])[0]
     with year_tab:
         df = get_year_data(year_ov, client, email)
         fig = plot_year_overview(df, year_ov)
