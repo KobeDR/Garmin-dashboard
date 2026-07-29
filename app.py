@@ -119,4 +119,5 @@ if view == 'Daily':
 else:
     df = get_year_data(year_ov, client, email)
     fig = plot_year_overview(df, year_ov)
+    st.pyplot(fig)
 
