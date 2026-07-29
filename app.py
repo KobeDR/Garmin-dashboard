@@ -5,6 +5,15 @@ from plots.plots import plot_year_overview, plot_day_overview, plot_activity_ove
 import datetime
 from datetime import date
 current_year = datetime.datetime.now().year
+@
+st.cache_resource
+def get_client(email, password):
+    client = Garmin(email, password)
+    client.login()
+    return client
+
+
+
 st.set_page_config(
     page_title="Garmin Dashboard",
     layout="wide"
@@ -61,8 +70,7 @@ if not email or not password:
     st.info("Please enter your Garmin email and password in the sidebar.")
     st.stop()
 try:
-    client = Garmin(email, password)
-    client.login()
+    client = get_client(email, password)
 except:
     st.info("Problem logging in - check email and password.")
 if view == 'Daily':
