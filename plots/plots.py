@@ -218,9 +218,11 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     
     
     fig.supxlabel('Time')
-    slp_time = stats['sleepingSeconds']/60/60
-    fig.suptitle(f"{day} {mon} {year}\n{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} hours slept - {round(stats['activeKilocalories'])} active calories burned")
-    
+    try: 
+        slp_time = stats['sleepingSeconds']/60/60
+        fig.suptitle(f"{day} {mon} {year}\n{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} hours slept - {round(stats['activeKilocalories'])} active calories burned")
+    except:
+        fig.suptitle(f"{day} {mon} {year}")
     
     
     
