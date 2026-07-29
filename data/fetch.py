@@ -4,7 +4,11 @@ from datetime import datetime
 from data.cache import load, save
 import streamlit as st
 
-
+@st.cache_resource
+def get_client(email, password):
+    client = Garmin(email, password)
+    client.login()
+    return client
 
 @st.cache_data
 def get_day_hr_data(date, _client, email):

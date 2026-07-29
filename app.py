@@ -1,18 +1,10 @@
 import streamlit as st
 from garminconnect import Garmin
-from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data
+from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_client
 from plots.plots import plot_year_overview, plot_day_overview, plot_activity_overview
 import datetime
 from datetime import date
 current_year = datetime.datetime.now().year
-@
-st.cache_resource
-def get_client(email, password):
-    client = Garmin(email, password)
-    client.login()
-    return client
-
-
 
 st.set_page_config(
     page_title="Garmin Dashboard",
