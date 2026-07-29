@@ -149,7 +149,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
         print('Sleep skipped.')
     if len(activities) > 0:
         for activity in activities:
-            start_act = datetime.strptime(activity['startTimeLocal'], "%Y-%m-%d %H:%M:%S")
+            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
             end_act = start_act + timedelta(seconds = activity['duration'])
             ax2.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
     try:
@@ -186,7 +186,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
             print('Sleep skipped.')
         if len(activities) > 0:
             for activity in activities:
-                start_act = datetime.strptime(activity['startTimeLocal'], "%Y-%m-%d %H:%M:%S")
+                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
                 end_act = start_act + timedelta(seconds = activity['duration'])
                 ax3.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
         ax3.set_ylim(0, (steps_df['steps_cumsum'].iloc[-1])+3000)
@@ -208,7 +208,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
             print('Sleep skipped.')
         if len(activities) > 0:
             for activity in activities:
-                start_act = datetime.strptime(activity['startTimeLocal'], "%Y-%m-%d %H:%M:%S")
+                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
                 end_act = start_act + timedelta(seconds = activity['duration'])
                 ax4.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
         ax4.tick_params(axis = 'x', labelrotation = 45)
