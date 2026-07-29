@@ -65,7 +65,7 @@ if ("client" not in st.session_state):
     client = get_client(email, password)
     st.session_state.client = client
     st.email= email
-elif (st.email != st.email):
+elif (email != st.email):
     client = get_client(email, password)
     st.session_state.client = client
     st.email= email
