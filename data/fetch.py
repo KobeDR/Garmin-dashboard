@@ -30,14 +30,11 @@ def get_day_hr_data(date, _client, email):
         day_today = f'0{day_today}'
     date_ref = f"{year}-{month}-{day}"
     date_today = f"{year_today}-{month_today}-{day_today}"
-    df= False
-    if isinstance(df, bool):
-        hr =  _client.get_heart_rates(date_ref)
-        
-        hr_df = pd.DataFrame((hr['heartRateValues']), columns = ['Timepoint', 'HR'])
-        save(f'{date_ref}_hr', hr_df, email)
-        return hr_df
-    return df
+    hr =  _client.get_heart_rates(date_ref)
+    
+    hr_df = pd.DataFrame((hr['heartRateValues']), columns = ['Timepoint', 'HR'])
+    save(f'{date_ref}_hr', hr_df, email)
+    return hr_df
     
 # def get_day_sleep_hr_data(date, _client, email):
 #     day = date.day
@@ -81,13 +78,10 @@ def get_day_stress_data(date, _client, email):
     date_ref = f"{year}-{month}-{day}"
     date_today = f"{year_today}-{month_today}-{day_today}"
 
-    df= False
-    if isinstance(df, bool):
-        stress = _client.get_stress_data(date_ref)
-        stress_df = pd.DataFrame((stress['stressValuesArray']), columns = ['Timepoint', 'Stress'])
-        save(f'{date_ref}_stress', stress_df, email)
-        return stress_df
-    return df
+
+    stress = _client.get_stress_data(date_ref)
+    stress_df = pd.DataFrame((stress['stressValuesArray']), columns = ['Timepoint', 'Stress'])
+    return stress_df
 
 @st.cache_data
 def get_year_data(year, _client, email):
