@@ -117,7 +117,11 @@ if view == 'Daily':
             st.info("No activity selected.")            
         
 else:
-    df = get_year_data(year_ov, client, email)
-    fig = plot_year_overview(df, year_ov)
-    st.pyplot(fig)
+    year_tab = st.tabs([
+            "Year",
+            ]) 
+    with year_tab:
+        df = get_year_data(year_ov, client, email)
+        fig = plot_year_overview(df, year_ov)
+        st.pyplot(fig)
 
