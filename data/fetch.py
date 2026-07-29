@@ -11,7 +11,6 @@ def get_client(email, password):
     client.login()
     return client
 
-@st.cache_data
 def get_day_hr_data(date, _client, email):
     day = date.day
     year = date.year
@@ -56,7 +55,6 @@ def get_day_hr_data(date, _client, email):
 #         return hr_df
 #     return df
 
-@st.cache_data
 def get_day_stress_data(date, _client, email):
     day = date.day
     year = date.year
@@ -81,7 +79,6 @@ def get_day_stress_data(date, _client, email):
     stress_df = pd.DataFrame((stress['stressValuesArray']), columns = ['Timepoint', 'Stress'])
     return stress_df
 
-@st.cache_data
 def get_year_data(year, _client, email):
     year = int(year)
     
