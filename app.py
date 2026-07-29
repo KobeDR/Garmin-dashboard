@@ -1,5 +1,4 @@
 import streamlit as st
-from garminconnect import Garmin
 from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_client
 from plots.plots import plot_year_overview, plot_day_overview, plot_activity_overview
 import datetime

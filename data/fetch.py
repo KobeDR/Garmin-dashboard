@@ -2,6 +2,7 @@ import pandas as pd
 from calendar import monthrange
 from datetime import datetime
 from data.cache import load, save
+from garminconnect import Garmin
 import streamlit as st
 
 @st.cache_resource
