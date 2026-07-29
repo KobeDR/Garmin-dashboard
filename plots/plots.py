@@ -13,7 +13,7 @@ def plot_year_overview(df, year):
     fig, axs = plt.subplots(
         5,
         2,
-        figsize=(9,12),dpi = 200,
+        figsize=(9,12),dpi = 1000,
         sharex=True
     )
 
@@ -72,7 +72,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
         2,
         2,
-        figsize=(12,6),dpi = 200,
+        figsize=(12,6),dpi = 1000,
         sharex = True
     )
     if month<10:
@@ -259,7 +259,7 @@ def plot_activity_overview(activity,activity_details):
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
             2,
             2,
-            figsize=(12,6),dpi = 200,
+            figsize=(12,6),dpi = 1000,
             sharex = True
         )
         try:
