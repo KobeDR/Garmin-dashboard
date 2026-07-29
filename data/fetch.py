@@ -5,7 +5,6 @@ from data.cache import load, save
 from garminconnect import Garmin
 import streamlit as st
 
-# @st.cache_resource
 def get_client(email, password):
     client = Garmin(email, password)
     client.login()

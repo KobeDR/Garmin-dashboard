@@ -83,7 +83,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     stats = client.get_stats(date_ref)
     y = df_hr['HR']
     y = [i if i is not None else np.nan for i in y]
-    x = [datetime.fromtimestamp(int(i) / 1000) for i in df_hr['Timepoint']]
+    x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_hr['Timepoint']]
     x_timestamps = [int(i)/1000 for i in df_hr['Timepoint']]
     x = [i for i,j in zip(x, y) if np.isfinite(j)]
     x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
@@ -105,13 +105,13 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     activities = client.get_activities_by_date(date_ref, date_ref)
     if len(activities) > 0:
         for activity in activities:
-            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
+            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
             end_act = start_act + timedelta(seconds = activity['duration'])
             ax1.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
             
     try:
         xs, ys = smooth(x_timestamps, y)
-        xs = [datetime.fromtimestamp(int(round(i))) for i in xs]
+        xs = [datetime.fromtimestamp(int(round(i))) + timedelta(hours = 2) for i in xs]
         ax1.plot(xs, ys, c = 'red')
     except:
         print('Smoothing skipped')
@@ -133,7 +133,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     
     y = df_stress['Stress']
     y = [i if i is not None else np.nan for i in y]
-    x = [datetime.fromtimestamp(int(i) / 1000) for i in df_stress['Timepoint']]
+    x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_stress['Timepoint']]
     x_timestamps = [int(i)/1000 for i in df_stress['Timepoint']]
 
     x = [i for i,j in zip(x, y) if np.isfinite(j)]
@@ -149,12 +149,12 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
         print('Sleep skipped.')
     if len(activities) > 0:
         for activity in activities:
-            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
+            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
             end_act = start_act + timedelta(seconds = activity['duration'])
             ax2.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
     try:
         xs, ys = smooth(x_timestamps, y)
-        xs = [datetime.fromtimestamp(int(round(i))) for i in xs]
+        xs = [datetime.fromtimestamp(int(round(i))) + timedelta(hours = 2) for i in xs]
         ax2.plot(xs, ys, c = 'red')
     except:
         print('Smoothing skipped')
@@ -186,7 +186,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
             print('Sleep skipped.')
         if len(activities) > 0:
             for activity in activities:
-                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
+                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
                 end_act = start_act + timedelta(seconds = activity['duration'])
                 ax3.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
         ax3.set_ylim(0, (steps_df['steps_cumsum'].iloc[-1])+3000)
@@ -199,7 +199,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     try:
         bb = client.get_body_battery(date_ref)
         bb_df = pd.DataFrame(bb[0]['bodyBatteryValuesArray'], columns = ['Timepoint', 'BB'])
-        bb_df['Timepoint'] = [datetime.fromtimestamp(i/1000) for i in bb_df['Timepoint']]
+        bb_df['Timepoint'] = [datetime.fromtimestamp(i/1000) + timedelta(hours = 2) for i in bb_df['Timepoint']]
         ax4.plot(bb_df['Timepoint'],bb_df['BB'], color= 'purple')
         ax4.fill_between(bb_df['Timepoint'],bb_df['BB'], color= 'purple', alpha = 0.3)
         try:
@@ -208,7 +208,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
             print('Sleep skipped.')
         if len(activities) > 0:
             for activity in activities:
-                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
+                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
                 end_act = start_act + timedelta(seconds = activity['duration'])
                 ax4.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
         ax4.tick_params(axis = 'x', labelrotation = 45)
