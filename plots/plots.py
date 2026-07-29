@@ -105,7 +105,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     activities = client.get_activities_by_date(date_ref, date_ref)
     if len(activities) > 0:
         for activity in activities:
-            start_act = datetime.strptime(activity['startTimeLocal'], "%Y-%m-%d %H:%M:%S")
+            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S")
             end_act = start_act + timedelta(seconds = activity['duration'])
             ax1.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
             
