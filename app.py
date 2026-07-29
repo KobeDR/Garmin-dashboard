@@ -30,17 +30,9 @@ with st.sidebar.form("plot_form"):
     st.header('View')
     view = st.radio(
         "View",
-        ['Yearly', 'Daily']
+        ['Daily', 'Yearly']
     )
-    st.header('Yearly')
-    year_ov = st.number_input(
-        "Year",
-        min_value=2015,
-        max_value=current_year,
-        value=current_year,
-        step=1,
-    )
-    st.divider()
+    
     st.header('Daily')
 
     date = st.date_input(
@@ -50,7 +42,20 @@ with st.sidebar.form("plot_form"):
     month = date.month
     day = date.day
     year = date.year
+    
+    st.divider()
+    
+    st.header('Yearly')
+    year_ov = st.number_input(
+        "Year",
+        min_value=2015,
+        max_value=current_year,
+        value=current_year,
+        step=1,
+    )
+    
     generate = st.form_submit_button("Generate plot")
+
         
 if ((not generate) and (not "initial_press" in st.session_state)):
     st.stop()
@@ -64,12 +69,6 @@ info1 = st.info(f"Logging in {email}...")
 if ("client" not in st.session_state):
     client = get_client(email, password)
     st.session_state.client = client
-    st.email= email
-elif (email != st.email):
-    client = get_client(email, password)
-    st.session_state.client = client
-    st.email= email
-info1.empty()
 client = st.session_state.client
 if view == 'Daily':
     day_tab, activity_tab = st.tabs([
