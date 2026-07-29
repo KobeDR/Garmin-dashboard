@@ -91,13 +91,12 @@ if view == 'Daily':
         for a in activities
         ]
         if len(activity_names)>0:
-            index_ = 1
+            selected = st.sidebar.selectbox(
+            "Activity",
+            activity_names, index = 0
+            )
         else:
-            index_= 0
-        selected = st.sidebar.selectbox(
-        "Activity",
-        ['None'] + activity_names, index = index_
-        )
+            selected = 'None'
 
         if selected != "None":
             idx = activity_names.index(selected)
