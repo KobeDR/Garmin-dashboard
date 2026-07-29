@@ -1,7 +1,5 @@
 # Garmin Dashboard
 
-# Garmin Dashboard
-
 A personal dashboard for visualizing health, wellness, and activity data from Garmin Connect. The application is built with **Streamlit** and uses the **python-garminconnect** library to retrieve data from a Garmin account.
 
 ## Features
