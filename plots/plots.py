@@ -93,8 +93,8 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     ax1.plot(x,y, alpha=.3, c= 'black')
     try:
         sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
-        start_sleep = datetime.fromtimestamp(sleep['sleepStartTimestampGMT']/1000)
-        end_sleep = datetime.fromtimestamp(sleep['sleepEndTimestampGMT']/1000)
+        start_sleep = datetime.fromtimestamp(sleep['sleepStartTimestampGMT']/1000) + timedelta(hours = 2)
+        end_sleep = datetime.fromtimestamp(sleep['sleepEndTimestampGMT']/1000) + timedelta(hours = 2)
         ax1.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
     except:
         print('Sleep skipped')
