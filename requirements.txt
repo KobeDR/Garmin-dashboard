@@ -1,0 +1,8 @@
+streamlit
+garminconnect
+numpy
+pandas
+scipy
+matplotlib
+plotly
+python-dotenv
