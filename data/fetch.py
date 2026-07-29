@@ -31,9 +31,7 @@ def get_day_hr_data(date, _client, email):
     date_ref = f"{year}-{month}-{day}"
     date_today = f"{year_today}-{month_today}-{day_today}"
     hr =  _client.get_heart_rates(date_ref)
-    
     hr_df = pd.DataFrame((hr['heartRateValues']), columns = ['Timepoint', 'HR'])
-    save(f'{date_ref}_hr', hr_df, email)
     return hr_df
     
 # def get_day_sleep_hr_data(date, _client, email):
