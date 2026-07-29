@@ -61,9 +61,14 @@ if not email or not password:
     st.info("Please enter your Garmin email and password in the sidebar.")
     st.stop()
 info1 = st.info(f"Logging in {email}...")
-if "client" not in st.session_state:
+if ("client" not in st.session_state):
     client = get_client(email, password)
     st.session_state.client = client
+    st.email= email
+elif (st.email != st.email):
+    client = get_client(email, password)
+    st.session_state.client = client
+    st.email= email
 info1.empty()
 client = st.session_state.client
 if view == 'Daily':
