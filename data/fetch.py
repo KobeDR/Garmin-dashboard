@@ -30,10 +30,7 @@ def get_day_hr_data(date, _client, email):
         day_today = f'0{day_today}'
     date_ref = f"{year}-{month}-{day}"
     date_today = f"{year_today}-{month_today}-{day_today}"
-    if not (date_ref == date_today):
-        df = load(f'{date_ref}_hr', email)
-    else:
-        df= False
+    df= False
     if isinstance(df, bool):
         hr =  _client.get_heart_rates(date_ref)
         
@@ -83,10 +80,8 @@ def get_day_stress_data(date, _client, email):
         day_today = f'0{day_today}'
     date_ref = f"{year}-{month}-{day}"
     date_today = f"{year_today}-{month_today}-{day_today}"
-    if not (date_ref == date_today):
-        df = load(f'{date_ref}_stress', email)
-    else:
-        df= False
+
+    df= False
     if isinstance(df, bool):
         stress = _client.get_stress_data(date_ref)
         stress_df = pd.DataFrame((stress['stressValuesArray']), columns = ['Timepoint', 'Stress'])
