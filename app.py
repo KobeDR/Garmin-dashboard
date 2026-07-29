@@ -70,6 +70,7 @@ if ("client" not in st.session_state):
     client = get_client(email, password)
     st.session_state.client = client
 client = st.session_state.client
+info1.empty()
 if view == 'Daily':
     day_tab, activity_tab = st.tabs([
         "Daily",
