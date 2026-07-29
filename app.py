@@ -60,9 +60,9 @@ else:
 if not email or not password:
     st.info("Please enter your Garmin email and password in the sidebar.")
     st.stop()
-st.info(f"Logging in {email}...")
+info1 = st.info(f"Logging in {email}...")
 client = get_client(email, password)
-st.info(f"Logged in {email}!")
+info1.empty()
 
 if view == 'Daily':
     day_tab, activity_tab = st.tabs([
