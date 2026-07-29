@@ -13,7 +13,7 @@ def plot_year_overview(df, year):
     fig, axs = plt.subplots(
         5,
         2,
-        figsize=(9,12),dpi = 1000,
+        figsize=(12,15),dpi = 1000,
         sharex=True
     )
 

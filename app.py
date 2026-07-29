@@ -75,7 +75,7 @@ if view == 'Daily':
         df_hr = get_day_hr_data(date, client, email)
         df_stress = get_day_stress_data(date, client, email)
         fig_day = plot_day_overview(df_hr, df_stress, year, month, day, client)
-        st.pyplot(fig_day)
+        st.pyplot(fig_day, use_container_width=True)
     
     
     with activity_tab:
@@ -111,7 +111,7 @@ if view == 'Daily':
             if isinstance(fig_act, bool):
                 st.info('No details found.')
             else:
-                st.pyplot(fig_act)
+                st.pyplot(fig_act, use_container_width=True)
         else:
             activity = None
             st.info("No activity selected.")            
@@ -123,5 +123,5 @@ else:
     with year_tab:
         df = get_year_data(year_ov, client, email)
         fig = plot_year_overview(df, year_ov)
-        st.pyplot(fig)
+        st.pyplot(fig, use_container_width=True)
 
