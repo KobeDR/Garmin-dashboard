@@ -168,7 +168,11 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     ax2.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax2.set_ylabel('Stress %')
     ax2.grid(alpha=.3)
-    
+    ax3.grid(alpha=.3)
+    ax3.set_ylabel('# Steps')
+    ax4.grid(alpha=.3)
+    ax4.set_ylabel('Body battery %')
+    ax4.set_ylim(0, 100)
     try:
         steps = client.get_steps_data(date_ref)
         steps_df = pd.DataFrame(steps)
@@ -188,8 +192,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
         ax3.set_ylim(0, (steps_df['steps_cumsum'].iloc[-1])+3000)
         ax3.tick_params(axis = 'x', labelrotation = 45)
         ax3.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-        ax3.set_ylabel('# Steps')
-        ax3.grid(alpha=.3)
+        
     except:
         print('Steps skipped.')
         
@@ -210,9 +213,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
                 ax4.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
         ax4.tick_params(axis = 'x', labelrotation = 45)
         ax4.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-        ax4.set_ylabel('Body battery %')
-        ax4.set_ylim(0, 100)
-        ax4.grid(alpha=.3)
+        
     except:
         print('Body battery skipped.')
     
