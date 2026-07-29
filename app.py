@@ -61,8 +61,7 @@ else:
 if not email or not password:
     st.info("Please enter your Garmin email and password in the sidebar.")
     st.stop()
-try:
-    client = get_client(email, password)
+client = get_client(email, password)
 except:
     st.info("Problem logging in - check email and password.")
 if view == 'Daily':
