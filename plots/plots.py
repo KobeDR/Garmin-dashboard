@@ -415,7 +415,6 @@ def plot_running_activity_overview(activity,activity_details):
                 0.85,
                 y,
                 value,
-                ha="right",
                 fontsize=12,
             )
 
