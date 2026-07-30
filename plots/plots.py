@@ -665,6 +665,167 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         fig.suptitle(f"{day} {mon} {year}")
     
     
+    ax_summary.axis("off")
+    
+
+
+
+
+    
+
+    
+    try:
+        avg_pace = f"{int(activity['averageSpeed']**-1 * 1000 // 60)}:{int((1000/activity['averageSpeed']) % 60):02d} min/km"
+        max_pace = f"{int(activity['maxSpeed']**-1 * 1000 // 60)}:{int((1000/activity['maxSpeed']) % 60):02d} min/km"
+        avg_hr = f"{activity['averageHR']} bpm"
+        max_hr = f"{activity['maxHR']} bpm"
+        elev = f"{activity['elevationGain']:.0f} m"
+        vO2MaxValue = f"{activity['vO2MaxValue']:.0f}"
+        calories = f"{activity['calories']:.0f}"
+        stats = [
+            ("Average pace", avg_pace),
+            ("Max pace", max_pace),
+            ("Average HR", avg_hr),
+            ("Max HR", max_hr),
+            ("Elevation gain", elev),
+            ('vO2Max', vO2MaxValue),
+            ('Calories burned', calories)
+        ]
+
+        y = 0.9
+
+        for label, value in stats:
+
+            ax_summary.text(
+                0.2,
+                y,
+                label,
+                fontsize=11,
+                color="gray",
+            )
+
+            ax_summary.text(
+                0.7,
+                y,
+                value,
+                fontsize=12,
+            )
+
+            y -= 0.2
+    except:
+        print("Pass summary")
+
+
+
+    plt.rcParams["font.family"] = "Helvetica"
+    
+    
+    try:
+        colors = [
+                    "#4F7FD9",  # Zone 1
+                    "#5DAA68",  # Zone 2
+                    "#FF8C1A",  # Zone 3
+                    "#D83A34",  # Zone 4
+                    "#7E3FA3",  # Zone 5
+            ]
+            
+        zones = [
+                activity['hrTimeInZone_1'],
+                activity['hrTimeInZone_2'],
+                activity['hrTimeInZone_3'],
+                activity['hrTimeInZone_4'],
+                activity['hrTimeInZone_5']
+            ]
+        
+        
+        labels = [
+            "Zone 1",
+            "Zone 2",
+            "Zone 3",
+            "Zone 4",
+            "Zone 5"
+        ]
+        
+        wedges, texts, autotexts = ax_pie.pie(
+            zones,
+            labels=labels,                 # legend elsewhere
+            colors=colors,
+            startangle=90,
+            counterclock=False,
+            autopct="%1.0f%%",
+
+            # <-- Move percentages outward
+            pctdistance=0.76,
+
+            # Donut
+            wedgeprops={
+                "width":0.42,
+                "edgecolor":"white",
+                "linewidth":2,
+            },
+
+            # <-- White percentages
+            textprops={
+                "color":"white",
+                "fontsize":10,
+                "fontweight":"bold",
+            },
+        )
+    
+    except:
+        colors = [
+                "grey"
+        ]
+        
+        zones = [
+                100
+            ]
+        
+        
+        labels = [
+            "No data"
+        ]
+        
+        wedges, texts, autotexts = ax_pie.pie(
+            zones,
+            labels=labels,                 # legend elsewhere
+            colors=colors,
+            startangle=90,
+            counterclock=False,
+            autopct="%1.0f%%",
+
+            # <-- Move percentages outward
+            pctdistance=0.76,
+
+            # Donut
+            wedgeprops={
+                "width":0.42,
+                "edgecolor":"white",
+                "linewidth":2,
+            },
+
+            # <-- White percentages
+            textprops={
+                "color":"white",
+                "fontsize":10,
+                "fontweight":"bold",
+            },
+        )
+        
+    ax_pie.legend(
+        wedges,
+        labels,
+        title="Sleep zones",
+        loc="center left",
+        bbox_to_anchor=(1.05, 0.5),
+        frameon=False,
+    )
+
+    # Centre text
+    ax_pie.set_title("Sleep analysis")
+
+
+    ax_pie.set(aspect="equal")
     
     plt.tight_layout()
 
