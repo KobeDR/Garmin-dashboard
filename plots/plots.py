@@ -246,19 +246,36 @@ def plot_running_activity_overview(activity,activity_details):
     
     if activity_details['detailsAvailable']:
         di = {}
-        speed_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directSpeed'][0]
-        di['mpkm'] = [1000/((i['metrics'][speed_index]*60)) if (i['metrics'][speed_index]*60) > 0 else np.nan for i in activity_details['activityDetailMetrics']]
-        duration_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'sumDuration'][0]
-        di['durationSeconds'] = [(i['metrics'][duration_index])  for i in activity_details['activityDetailMetrics'] ]
-        elevation_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directElevation'][0]
-        di['ElevationMeters'] = [(i['metrics'][elevation_index])  for i in activity_details['activityDetailMetrics'] ]
-        hr_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directHeartRate'][0]
-        di['HR'] = [(i['metrics'][hr_index])  for i in activity_details['activityDetailMetrics'] ]
-        cadence_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directDoubleCadence'][0]
-        di['Cadence'] = [(i['metrics'][cadence_index])  for i in activity_details['activityDetailMetrics'] ]
-        temp_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directAirTemperature'][0]
-        di['Temp'] = [(i['metrics'][temp_index])  for i in activity_details['activityDetailMetrics'] ]
-
+        try:
+            speed_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directSpeed'][0]
+            di['mpkm'] = [1000/((i['metrics'][speed_index]*60)) if (i['metrics'][speed_index]*60) > 0 else np.nan for i in activity_details['activityDetailMetrics']]
+        except:
+            print('Fail')
+        try: 
+            duration_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'sumDuration'][0]
+            di['durationSeconds'] = [(i['metrics'][duration_index])  for i in activity_details['activityDetailMetrics'] ]
+        except:
+            print('Fail')
+        try:
+            elevation_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directElevation'][0]
+            di['ElevationMeters'] = [(i['metrics'][elevation_index])  for i in activity_details['activityDetailMetrics'] ]
+        except:
+            print('Fail')
+        try:
+            hr_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directHeartRate'][0]
+            di['HR'] = [(i['metrics'][hr_index])  for i in activity_details['activityDetailMetrics'] ]
+        except:
+            print('Fail')
+        try:
+            cadence_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directDoubleCadence'][0]
+            di['Cadence'] = [(i['metrics'][cadence_index])  for i in activity_details['activityDetailMetrics'] ]
+        except:
+            print('Fail')    
+        try:
+            temp_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directAirTemperature'][0]
+            di['Temp'] = [(i['metrics'][temp_index])  for i in activity_details['activityDetailMetrics'] ]
+        except:
+            print('Fail')
         
         df = pd.DataFrame(di)
         fig = plt.figure(figsize=(14, 8), dpi=200)
@@ -292,6 +309,7 @@ def plot_running_activity_overview(activity,activity_details):
             ymin = df["mpkm"].quantile(0.01)
             ax2.set_ylim(ymin*0.95, ymax * 1.05)
         except:
+            ax2.set_ylim(0, 100)
             print('Skipping HR')
         
         ax2.set_xlim(0, df['durationSeconds'].iloc[-1])
@@ -310,6 +328,7 @@ def plot_running_activity_overview(activity,activity_details):
             ax3.set_ylim(ymin*0.95, ymax * 1.05)
         except:
             print('Skipping cadence')
+            ax3.set_ylim(0, 100)
         
         ax3.set_xlim(0, df['durationSeconds'].iloc[-1])
         ax3.grid(alpha=.3)
@@ -330,6 +349,7 @@ def plot_running_activity_overview(activity,activity_details):
             
             
         except:
+            ax1.set_ylim(0, 100)
             print('Skipping HR')
         
         ax1.set_xlim(0, df['durationSeconds'].iloc[-1])
@@ -350,6 +370,7 @@ def plot_running_activity_overview(activity,activity_details):
             ymin = df["Temp"].quantile(0.01)
             ax4.set_ylim(ymin*0.95, ymax * 1.05)
         except:
+            ax4.set_ylim(0, 100)
             print('Skipping Temp')
             
             

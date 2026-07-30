@@ -111,7 +111,6 @@ if view == 'Daily':
             activity_id = activity["activityId"]
 
             details = client.get_activity_details(activity_id)
-            fig_act = plot_running_activity_overview(activity,details)
             try:
                 if activity['activityType']['typeKey'] != 'running':
                     st.info('No running activity selected.')
