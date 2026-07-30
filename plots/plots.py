@@ -294,7 +294,6 @@ def plot_running_activity_overview(activity,activity_details):
         ax1.set_ylabel('Speed (min/km)')
         ax1_2 = ax1.twinx()
         ax1_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
-        ax1_2.set_yticklabels([])
         ax1_2.set_ylabel('Elevation (meters)')
 
         ax1_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
@@ -330,7 +329,6 @@ def plot_running_activity_overview(activity,activity_details):
         ax3_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
         ax3_2.set_ylabel('Elevation (meters)')
 
-        ax3_2.set_yticklabels([])
         
 
         ax3_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
@@ -366,24 +364,64 @@ def plot_running_activity_overview(activity,activity_details):
         ]
 
 
-        ax_pie.set_title("HR Zones")
-        
-        ax_pie.pie(
+        plt.rcParams["font.family"] = "Helvetica"
+
+        colors = [
+            "#4F7FD9",  # Zone 1
+            "#5DAA68",  # Zone 2
+            "#FF8C1A",  # Zone 3
+            "#D83A34",  # Zone 4
+            "#7E3FA3",  # Zone 5
+        ]
+
+        wedges, texts, autotexts = ax_pie.pie(
             zones,
-            labels=labels,
+            labels=None,                 # legend elsewhere
+            colors=colors,
             startangle=90,
-            wedgeprops=dict(width=0.45),
+            counterclock=True,
             autopct="%1.0f%%",
+
+            # <-- Move percentages outward
+            pctdistance=0.76,
+
+            # Donut
+            wedgeprops={
+                "width":0.42,
+                "edgecolor":"white",
+                "linewidth":2,
+            },
+
+            # <-- White percentages
+            textprops={
+                "color":"white",
+                "fontsize":15,
+                "fontweight":"bold",
+            },
         )
+
+        # Centre text
         ax_pie.text(
             0,
-            0,
-            f"{activity['distance']/1000:.1f}\nkm",
+            0.05,
+            time_str = str(timedelta(seconds=df['durationSeconds'].iloc[-1])),
             ha="center",
             va="center",
-            fontsize=18,
+            fontsize=24,
             fontweight="bold",
         )
+
+        ax_pie.text(
+            0,
+            -0.12,
+            "Total Time",
+            ha="center",
+            va="center",
+            fontsize=13,
+            color="dimgray",
+        )
+
+        ax_pie.set(aspect="equal")
         
         fig.supxlabel('Time (seconds)')
         fig.suptitle(f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}")
