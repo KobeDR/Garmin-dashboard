@@ -397,12 +397,12 @@ def plot_running_activity_overview(activity,activity_details):
         except:
             max_pace = ""
         try:
-            avg_hr = f"{activity['averageHR']} bpm"
+            avg_hr = f"{round(activity['averageHR'])} bpm"
         except:
             avg_hr = ""        
         
         try:
-            max_hr = f"{activity['maxHR']} bpm"
+            max_hr = f"{round(activity['maxHR'])} bpm"
         except:
             max_hr = ""  
         try:
