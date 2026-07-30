@@ -185,6 +185,7 @@ def plot_running_activity_overview(activity,activity_details):
     except Exception: zones, labels, colors = [100], ['No data'], ['grey']
     fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors),
                          textinfo='percent', textfont=dict(color='white', size=16), name='HR Zones'), row=1, col=2)
+    pie_center = sum(fig.data[-1].domain.x) / 2
     values = []
     for label, key, formatter in [('Average pace', 'averageSpeed', lambda v: f"{int(1000/v//60)}:{int((1000/v)%60):02d} min/km"),
                                   ('Max pace', 'maxSpeed', lambda v: f"{int(1000/v//60)}:{int((1000/v)%60):02d} min/km"),
@@ -193,11 +194,11 @@ def plot_running_activity_overview(activity,activity_details):
                                   ('Calories burned', 'calories', lambda v: f'{v:.0f}')]:
         try: values.append(f'<b>{label}</b>: {formatter(activity[key])}')
         except Exception: values.append(f'<b>{label}</b>:')
-    fig.add_annotation(text='<br>'.join(values), x=.78, y=.105, xref='paper', yref='paper', showarrow=False,
-                       align='left', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
-    fig.add_annotation(text='Time in HR Zones', x=.78, y=1.015, xref='paper', yref='paper', showarrow=False,
+    fig.add_annotation(text='<br>'.join(values), x=pie_center, y=.105, xref='paper', yref='paper', showarrow=False,
+                       align='center', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
+    fig.add_annotation(text='Time in HR Zones', x=pie_center, y=1.015, xref='paper', yref='paper', showarrow=False,
                        yanchor='bottom', font=dict(size=20, color='#111111'))
-    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:13px'>Total Time</span>", x=.78, y=.61, xref='paper', yref='paper', showarrow=False, font=dict(size=18, color='#111111'))
+    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:13px'>Total Time</span>", x=pie_center, y=.61, xref='paper', yref='paper', showarrow=False, font=dict(size=18, color='#111111'))
     fig.update_layout(template='plotly_white', width=1600, height=700, showlegend=True,
                       font=dict(color='#111111'), legend=dict(x=1.01, y=.77, font=dict(size=14, color='#111111')),
                       paper_bgcolor='white', plot_bgcolor='white',
@@ -249,6 +250,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     except Exception: zones, labels, colors = [100], ['No data'], ['grey']
     fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors),
                          textinfo='percent', textfont=dict(color='white', size=16), name='Sleep zones'), row=1, col=2)
+    pie_center = sum(fig.data[-1].domain.x) / 2
     summary = []
     try: summary.append(f"<b>Average HR</b>: {round(np.mean(df_hr['HR']))} bpm")
     except Exception: pass
@@ -258,9 +260,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     except Exception: pass
     for label, value in [('Active calories burned', stats.get('activeKilocalories')), ('Overall sleep score', sleep.get('sleepScores',{}).get('overall',{}).get('value')), ('Sleep stress', sleep.get('sleepScores',{}).get('stress',{}).get('qualifierKey'))]:
         if value is not None: summary.append(f'<b>{label}</b>: {value}')
-    fig.add_annotation(text='<br>'.join(summary), x=.78, y=.105, xref='paper', yref='paper', showarrow=False,
-                       align='left', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
-    fig.add_annotation(text='Sleep analysis', x=.78, y=1.015, xref='paper', yref='paper', showarrow=False,
+    fig.add_annotation(text='<br>'.join(summary), x=pie_center, y=.105, xref='paper', yref='paper', showarrow=False,
+                       align='center', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
+    fig.add_annotation(text='Sleep analysis', x=pie_center, y=1.015, xref='paper', yref='paper', showarrow=False,
                        yanchor='bottom', font=dict(size=20, color='#111111'))
     _daily_layout(fig, f'{day} {mon} {year}')
     fig.update_layout(height=700, showlegend=True, legend=dict(x=1.01, y=.77, font=dict(size=14, color='#111111')),
