@@ -7,6 +7,7 @@ import pandas as pd
 from analysis.metrics import METRICS
 from analysis.smoothing import smooth
 from datetime import datetime, timedelta
+from pywaffle import Waffle
 
 def plot_year_overview(df, year):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -266,7 +267,7 @@ def plot_running_activity_overview(activity,activity_details):
             4,
             2,
             figure=fig,
-            width_ratios=[3, 1],   # left plots wider
+            width_ratios=[2, 2],   # left plots wider
             hspace=0.15,
             wspace=0.3,
         )
@@ -295,6 +296,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax1_2 = ax1.twinx()
         ax1_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
         ax1_2.set_yticklabels([])
+        ax1_2.set_ylabel('Elevation (meters)')
+
         ax1_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
 
         try:
@@ -326,6 +329,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax3.set_ylabel('HR (bpm)')
         ax3_2 = ax3.twinx()
         ax3_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
+        ax3_2.set_ylabel('Elevation (meters)')
+
         ax3_2.set_yticklabels([])
         
 
@@ -361,14 +366,25 @@ def plot_running_activity_overview(activity,activity_details):
             ">160",
         ]
 
+
+        ax_pie.set_title("HR Zones")
+        
         ax_pie.pie(
             zones,
             labels=labels,
-            autopct="%1.0f%%",
             startangle=90,
+            wedgeprops=dict(width=0.45),
+            autopct="%1.0f%%",
         )
-        ax_pie.set_title("HR Zones")
-        
+        ax_pie.text(
+            0,
+            0,
+            f"{activity['distance']/1000:.1f}\nkm",
+            ha="center",
+            va="center",
+            fontsize=18,
+            fontweight="bold",
+        )
         
         fig.supxlabel('Time (seconds)')
         fig.suptitle(f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}")
