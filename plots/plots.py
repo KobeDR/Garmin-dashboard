@@ -418,7 +418,7 @@ def plot_running_activity_overview(activity,activity_details):
                 fontsize=12,
             )
 
-            y -= 0.13
+            y -= 0.2
 
 
 
