@@ -705,11 +705,16 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         activekcal = f"{round(stats['activeKilocalories'])} calories"
     except:
         activekcal = ""        
+    try:
+        steps_n = steps_df['steps'].cumsum().iloc[-1]
+    except:
+        steps_n = ""
 
         
     stats = [
         ("Average HR", avg_hr),
         ("Max HR", max_hr),
+        ("# Steps", steps_n),
         ('Active calories burned', activekcal),
         ("Overall sleep score", sleep_overall),
         ("Sleep time", sleep_time),
