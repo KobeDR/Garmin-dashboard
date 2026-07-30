@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import FuncFormatter
+from matplotlib.gridspec import GridSpec
 import numpy as np
 import pandas as pd
 from analysis.metrics import METRICS
@@ -259,12 +260,27 @@ def plot_running_activity_overview(activity,activity_details):
 
         
         df = pd.DataFrame(di)
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
+        fig = plt.figure(figsize=(14, 8), dpi=200)
+
+        gs = GridSpec(
+            4,
             2,
-            2,
-            figsize=(12,6),dpi = 1000,
-            sharex = True
+            figure=fig,
+            width_ratios=[3, 1],   # left plots wider
+            hspace=0.15,
+            wspace=0.3,
         )
+
+        ax1 = fig.add_subplot(gs[0, 0])
+        ax2 = fig.add_subplot(gs[1, 0], sharex=ax1)
+        ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
+        ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
+
+        ax_pie = fig.add_subplot(gs[:, 1])    # spans all rows
+        
+        for ax in (ax1, ax2, ax3):
+            ax.tick_params(labelbottom=False)
+        
         try:
             ax1.plot(df['durationSeconds'], df['mpkm'], c = 'blue')
             ax1.fill_between(df['durationSeconds'], df['mpkm'], color = 'blue', alpha = 0.3)
@@ -330,6 +346,28 @@ def plot_running_activity_overview(activity,activity_details):
         ax4_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
         ax4_2.set_ylabel('Elevation (meters)')
         ax4_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
+        
+        zones = [
+            (df["HR"] < 120).sum(),
+            ((df["HR"] >= 120) & (df["HR"] < 140)).sum(),
+            ((df["HR"] >= 140) & (df["HR"] < 160)).sum(),
+            (df["HR"] >= 160).sum(),
+        ]
+
+        labels = [
+            "<120",
+            "120-140",
+            "140-160",
+            ">160",
+        ]
+
+        ax_pie.pie(
+            zones,
+            labels=labels,
+            autopct="%1.0f%%",
+            startangle=90,
+        )
+        ax_pie.set_title("HR Zones")
         
         
         fig.supxlabel('Time (seconds)')
