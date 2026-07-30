@@ -823,6 +823,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
     # Centre text
     ax_pie.set_title("Sleep analysis")
+    ax4.set_xlabel('Time (seconds)')
 
 
     ax_pie.set(aspect="equal")
