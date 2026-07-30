@@ -33,19 +33,26 @@ if not st.session_state.logged_in:
     if ((not generate) and (not "initial_press" in st.session_state)):
         st.stop()
     else:
-        st.session_state.initial_press = True
-        st.session_state.logged_in = True
-        info1 = st.info(f"Logging in {email}...")
-        st.session_state.email = email
-        info1.empty()
-        st.rerun()
-    if not email or not password:
-        st.info("Please enter your Garmin email and password in the sidebar.")
-        st.stop()
+        if not email or not password:
+            st.info("Please enter your Garmin email and password in the sidebar.")
+            st.stop()
+        else:
+            st.session_state.initial_press = True
+            st.session_state.logged_in = True
+            info1 = st.info(f"Logging in {email}...")
+            st.session_state.email = email
+            st.session_state.password = password
+            client = get_client(email, password)
+            st.session_state.client = client
+            info1.empty()
+            st.rerun()
+    
     
 
 else:
     email = st.session_state.email
+    password = st.session_state.password
+    client = st.session_state.client
     with st.sidebar.form("plot_form1"):
         st.header('View')
         view = st.radio(
@@ -75,10 +82,8 @@ else:
             )
         
     
-    if ("client" not in st.session_state):
-        client = get_client(email, password)
-        st.session_state.client = client
-    client = st.session_state.client
+    
+    
     
     if view == 'Daily':
         day_tab, activity_tab = st.tabs([
