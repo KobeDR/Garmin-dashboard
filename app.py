@@ -32,27 +32,27 @@ with st.sidebar.form("plot_form"):
         "View",
         ['Daily', 'Yearly']
     )
-    if view == 'Daily':
-        st.header('Daily')
+    
+    st.header('Daily')
 
-        date = st.date_input(
-            "Date",
-            value=date.today()
-        )
-        month = date.month
-        day = date.day
-        year = date.year
+    date = st.date_input(
+        "Date",
+        value=date.today()
+    )
+    month = date.month
+    day = date.day
+    year = date.year
     
-    else:
+    st.divider()
     
-        st.header('Yearly')
-        year_ov = st.number_input(
-            "Year",
-            min_value=2015,
-            max_value=current_year,
-            value=current_year,
-            step=1,
-        )
+    st.header('Yearly')
+    year_ov = st.number_input(
+        "Year",
+        min_value=2015,
+        max_value=current_year,
+        value=current_year,
+        step=1,
+    )
     
     generate = st.form_submit_button("Generate plot")
 
