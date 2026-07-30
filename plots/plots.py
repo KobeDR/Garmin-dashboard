@@ -549,9 +549,12 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     ax1.plot(x,y, c= 'red')
     ax1.fill_between(x,y, alpha=.3, color= 'red')
-    ymax = pd.Series(y).quantile(0.99)
-    ymin = pd.Series(y).quantile(0.01)
-    ax1.set_ylim(ymin*0.95, ymax * 1.05)
+    try:
+        ymax = pd.Series(y).quantile(0.99)
+        ymin = pd.Series(y).quantile(0.01)
+        ax1.set_ylim(ymin*0.95, ymax * 1.05)
+    except:
+        print('Fail')
     try:
         all_sleep = client.get_sleep_data(date_ref)
         sleep = all_sleep['dailySleepDTO']
@@ -611,13 +614,15 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
             ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
 
 
-    # ax.set_ylim(0, 100)
 
     ax2.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax2.set_ylabel('Stress %')
-    ymax = pd.Series(y).quantile(0.99)
-    ymin = pd.Series(y).quantile(0.01)
-    ax2.set_ylim(ymin*0.95, ymax * 1.05)
+    try:
+        ymax = pd.Series(y).quantile(0.99)
+        ymin = pd.Series(y).quantile(0.01)
+        ax2.set_ylim(ymin*0.95, ymax * 1.05)
+    except:
+        print('Fail')
     ax2.grid(alpha=.3)
     ax3.grid(alpha=.3)
     ax3.set_ylabel('# Steps')
