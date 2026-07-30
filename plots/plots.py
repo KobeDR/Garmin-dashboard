@@ -269,7 +269,7 @@ def plot_running_activity_overview(activity,activity_details):
             figure=fig,
             width_ratios=[2, 2],   # left plots wider
             hspace=0.15,
-            wspace=0.3,
+            wspace=0.2,
         )
 
         ax1 = fig.add_subplot(gs[0, 0])
