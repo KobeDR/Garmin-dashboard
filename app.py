@@ -54,6 +54,7 @@ else:
     password = st.session_state.password
     client = st.session_state.client
     with st.sidebar:
+        st.header(f"Logged in as {email}")
         view = st.radio(
             "View",
             ['Daily', 'Yearly']
