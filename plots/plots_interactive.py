@@ -180,6 +180,9 @@ def plot_running_activity_overview(activity,activity_details):
             fig.update_yaxes(range=[0, np.max(df['ElevationMeters']) + 20], showticklabels=False,
                              showgrid=False, secondary_y=True, row=row, col=1)
         except Exception: pass
+    # Matplotlib used an explicit 0-to-duration x-limit.  Plotly's automatic
+    # range adds visual padding at both ends, so keep the original limits.
+    fig.update_xaxes(range=[0, duration.iloc[-1]], col=1)
     fig.update_xaxes(title_text='Time (seconds)', row=4, col=1)
     try: zones = [activity[f'hrTimeInZone_{i}'] for i in range(1, 6)]; labels = [f'Zone {i}' for i in range(1, 6)]; colors = ['#4F7FD9','#5DAA68','#FF8C1A','#D83A34','#7E3FA3']
     except Exception: zones, labels, colors = [100], ['No data'], ['grey']
