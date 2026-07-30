@@ -297,7 +297,7 @@ def plot_running_activity_overview(activity,activity_details):
         ax1_2 = ax1.twinx()
         ax1_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
         ax1_2.set_ylabel('Elevation (meters)')
-
+        ax1_2.set_yticks([])
         ax1_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
 
         try:
@@ -313,6 +313,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax2_2 = ax2.twinx()
         ax2_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
         ax2_2.set_ylabel('Elevation (meters)')
+        ax2_2.set_yticks([])
+
         ax2_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
 
         
@@ -328,6 +330,7 @@ def plot_running_activity_overview(activity,activity_details):
         ax3.grid(alpha=.3)
         ax3.set_ylabel('HR (bpm)')
         ax3_2 = ax3.twinx()
+        ax3_2.set_yticks([])
         ax3_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
         ax3_2.set_ylabel('Elevation (meters)')
 
@@ -349,6 +352,7 @@ def plot_running_activity_overview(activity,activity_details):
         ax4_2 = ax4.twinx()
         ax4_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
         ax4_2.set_ylabel('Elevation (meters)')
+        ax4_2.set_yticks([])
         ax4_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
         
         ax4.set_xlabel('Time (seconds)')
