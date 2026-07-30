@@ -385,18 +385,24 @@ def plot_running_activity_overview(activity,activity_details):
         ax_summary.axis("off")
         
         avg_pace = f"{int(activity['averageSpeed']**-1 * 1000 // 60)}:{int((1000/activity['averageSpeed']) % 60):02d} min/km"
+        max_pace = f"{int(activity['maxSpeed']**-1 * 1000 // 60)}:{int((1000/activity['maxSpeed']) % 60):02d} min/km"
         avg_hr = f"{activity['averageHR']} bpm"
         max_hr = f"{activity['maxHR']} bpm"
         elev = f"{activity['elevationGain']:.0f} m"
+        vO2MaxValue = f"{activity['vO2MaxValue']:.0f}"
+        calories = f"{activity['calories']:.0f}"
 
         duration = str(timedelta(seconds=int(activity["duration"])))
 
 
         stats = [
-            ("Average Pace", avg_pace),
+            ("Average pace", avg_pace),
+            ("Max pace", max_pace),
             ("Average HR", avg_hr),
             ("Max HR", max_hr),
-            ("Elevation Gain", elev),
+            ("Elevation gain", elev),
+            ('vO2Max', vO2MaxValue),
+            ('Calories burned', calories)
         ]
 
         y = 0.62
