@@ -462,7 +462,7 @@ def plot_running_activity_overview(activity,activity_details):
         )
 
         # Centre text
-        ax_pie.set_title("Time in HR Zones", fontsize = 15)
+        ax_pie.set_title("Time in HR Zones")
         ax_pie.text(
             0,
             0.05,
