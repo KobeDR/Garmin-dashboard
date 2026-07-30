@@ -244,16 +244,6 @@ def plot_running_activity_overview(activity,activity_details):
 
         return f"{minutes}:{seconds:02d}"
     
-    def pace_formatter_fun(x):
-            minutes = int(x)
-            seconds = int(round((x - minutes) * 60))
-    
-            # Handle rounding (e.g. 5.999 -> 6:00)
-            if seconds == 60:
-                minutes += 1
-                seconds = 0
-    
-            return f"{minutes}:{seconds:02d}"
     if activity_details['detailsAvailable']:
         di = {}
         speed_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directSpeed'][0]
@@ -361,6 +351,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax4_2.set_ylabel('Elevation (meters)')
         ax4_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
         
+        ax4.set_xlabel('Time (seconds)')
+
         # zones = [
         #     (df["HR"] < 120).sum(),
         #     ((df["HR"] >= 120) & (df["HR"] < 140)).sum(),
@@ -392,7 +384,7 @@ def plot_running_activity_overview(activity,activity_details):
 
         ax_summary.axis("off")
         
-        avg_pace = f"{pace_formatter_fun(activity['averageSpeed'])} min/km"
+        avg_pace = f"{int(activity['averageSpeed']**-1 * 1000 // 60)}:{int((1000/activity['averageSpeed']) % 60):02d} min/km"
         avg_hr = f"{activity['averageHR']} bpm"
         max_hr = f"{activity['maxHR']} bpm"
         elev = f"{activity['elevationGain']:.0f} m"
@@ -499,7 +491,6 @@ def plot_running_activity_overview(activity,activity_details):
 
         ax_pie.set(aspect="equal")
         
-        fig.supxlabel('Time (seconds)')
         fig.suptitle(f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}")
         plt.tight_layout()
 
