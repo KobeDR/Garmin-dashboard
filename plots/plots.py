@@ -406,7 +406,7 @@ def plot_running_activity_overview(activity,activity_details):
             ('Calories burned', calories)
         ]
 
-        y = 0.62
+        y = 0.5
 
         for label, value in stats:
 
