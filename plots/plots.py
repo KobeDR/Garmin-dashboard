@@ -67,170 +67,6 @@ def plot_year_overview(df, year):
 
     return fig
 
-def plot_day_overview(df_hr, df_stress, year, month, day, client):
-    month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    mon = month_names[month-1]
-    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
-        2,
-        2,
-        figsize=(16, 7),dpi = 200,
-        sharex = True
-    )
-    if month<10:
-        month = f'0{month}'
-    if day<10:
-        day = f'0{day}'
-    date_ref = f"{year}-{month}-{day}"
-    stats = client.get_stats(date_ref)
-    y = df_hr['HR']
-    y = [i if i is not None else np.nan for i in y]
-    x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_hr['Timepoint']]
-    x_timestamps = [int(i)/1000 for i in df_hr['Timepoint']]
-    x = [i for i,j in zip(x, y) if np.isfinite(j)]
-    x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
-    y = [i for i in y if np.isfinite(i)]
-    
-    
-    ax1.plot(x,y, alpha=.3, c= 'black')
-    try:
-        sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
-        start_sleep = datetime.fromtimestamp(sleep['sleepStartTimestampGMT']/1000) + timedelta(hours = 2)
-        end_sleep = datetime.fromtimestamp(sleep['sleepEndTimestampGMT']/1000) + timedelta(hours = 2)
-        ax1.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
-    except:
-        print('Sleep skipped')
-    
-    
-        
-
-    activities = client.get_activities_by_date(date_ref, date_ref)
-    if len(activities) > 0:
-        for activity in activities:
-            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
-            end_act = start_act + timedelta(seconds = activity['duration'])
-            ax1.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
-            
-    try:
-        xs, ys = smooth(x_timestamps, y)
-        xs = [datetime.fromtimestamp(int(round(i))) + timedelta(hours = 2) for i in xs]
-        ax1.plot(xs, ys, c = 'red')
-    except:
-        print('Smoothing skipped')
-    ax1.axhline(
-        np.mean(y),
-        ls="--", c = 'blue'
-    )
-    
-    ax1.tick_params(axis = 'x', labelrotation = 45)
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-    ax1.set_ylabel('HR (BPM)')
-    ax1.grid(alpha=.3)
-    fig.supxlabel('Time')
-    
-    
-    
-    
-    
-    
-    y = df_stress['Stress']
-    y = [i if i is not None else np.nan for i in y]
-    x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_stress['Timepoint']]
-    x_timestamps = [int(i)/1000 for i in df_stress['Timepoint']]
-
-    x = [i for i,j in zip(x, y) if np.isfinite(j)]
-    x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
-
-    y = [i for i in y if np.isfinite(i)]
-    
-    
-    ax2.plot(x,y, alpha=.3, c= 'black')
-    try:
-        ax2.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
-    except:
-        print('Sleep skipped.')
-    if len(activities) > 0:
-        for activity in activities:
-            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
-            end_act = start_act + timedelta(seconds = activity['duration'])
-            ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
-    try:
-        xs, ys = smooth(x_timestamps, y)
-        xs = [datetime.fromtimestamp(int(round(i))) + timedelta(hours = 2) for i in xs]
-        ax2.plot(xs, ys, c = 'red')
-    except:
-        print('Smoothing skipped')
-    ax2.axhline(
-        np.mean(y),
-        ls="--", c = 'blue'
-    )
-
-    # ax.set_ylim(0, 100)
-    ax2.tick_params(axis = 'x', labelrotation = 45)
-    ax2.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-    ax2.set_ylabel('Stress %')
-    ax2.grid(alpha=.3)
-    ax3.grid(alpha=.3)
-    ax3.set_ylabel('# Steps')
-    ax4.grid(alpha=.3)
-    ax4.set_ylabel('Body battery %')
-    ax4.set_ylim(0, 100)
-    try:
-        steps = client.get_steps_data(date_ref)
-        steps_df = pd.DataFrame(steps)
-        steps_df['startGMT'] = pd.to_datetime(steps_df['startGMT'])+ timedelta(hours = 2)
-        steps_df['steps_cumsum'] = steps_df['steps'].cumsum()
-        ax3.plot(steps_df['startGMT'],steps_df['steps_cumsum'], c= 'blue')
-        ax3.fill_between(steps_df['startGMT'],steps_df['steps_cumsum'], color="blue", alpha=0.3)
-        try:
-            ax3.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
-        except:
-            print('Sleep skipped.')
-        if len(activities) > 0:
-            for activity in activities:
-                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
-                end_act = start_act + timedelta(seconds = activity['duration'])
-                ax3.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
-        ax3.set_ylim(0, (steps_df['steps_cumsum'].iloc[-1])+3000)
-        ax3.tick_params(axis = 'x', labelrotation = 45)
-        ax3.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-        
-    except:
-        print('Steps skipped.')
-        
-    try:
-        bb = client.get_body_battery(date_ref)
-        bb_df = pd.DataFrame(bb[0]['bodyBatteryValuesArray'], columns = ['Timepoint', 'BB'])
-        bb_df['Timepoint'] = [datetime.fromtimestamp(i/1000) + timedelta(hours = 2) for i in bb_df['Timepoint']]
-        ax4.plot(bb_df['Timepoint'],bb_df['BB'], color= 'purple')
-        ax4.fill_between(bb_df['Timepoint'],bb_df['BB'], color= 'purple', alpha = 0.3)
-        try:
-            ax4.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
-        except:
-            print('Sleep skipped.')
-        if len(activities) > 0:
-            for activity in activities:
-                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
-                end_act = start_act + timedelta(seconds = activity['duration'])
-                ax4.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
-        ax4.tick_params(axis = 'x', labelrotation = 45)
-        ax4.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-        
-    except:
-        print('Body battery skipped.')
-    
-    
-    fig.supxlabel('Time')
-    try: 
-        slp_time = stats['sleepingSeconds']/60/60
-        fig.suptitle(f"{day} {mon} {year}\n{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} hours slept - {round(stats['activeKilocalories'])} active calories burned")
-    except:
-        fig.suptitle(f"{day} {mon} {year}")
-    
-    
-    
-    plt.tight_layout()
-
-    return fig
 
 def plot_running_activity_overview(activity,activity_details):
     def pace_formatter(x, pos):
@@ -278,7 +114,7 @@ def plot_running_activity_overview(activity,activity_details):
             print('Fail')
         
         df = pd.DataFrame(di)
-        fig = plt.figure(figsize=(16, 7), dpi=200)
+        fig = plt.figure(figsize=(16, 7), dpi=200, constrained_layout=True)
 
         gs = GridSpec(
             4,
@@ -592,7 +428,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     xlims_max = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     mon = month_names[month-1]
-    fig = plt.figure(figsize=(16, 7), dpi=200)
+    fig = plt.figure(figsize=(16, 7), dpi=200, constrained_layout=True)
     
     gs = GridSpec(
         4,
