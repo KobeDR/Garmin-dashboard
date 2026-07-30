@@ -6,10 +6,10 @@ from datetime import date
 current_year = datetime.datetime.now().year
 
 st.set_page_config(
-    page_title="Garmin Dashboard",
+    page_title="Biometric Dashboard",
     layout="wide"
 )
-st.title("Garmin Dashboard")
+st.title("Biometric Dashboard")
 
 with st.sidebar.form("plot_form"):
 
