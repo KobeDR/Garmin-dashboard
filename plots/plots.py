@@ -277,8 +277,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
         ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
 
-        ax_pie     = fig.add_subplot(gs[:3, 1])
-        ax_summary = fig.add_subplot(gs[3, 1])   # top half
+        ax_pie     = fig.add_subplot(gs[:2, 1])
+        ax_summary = fig.add_subplot(gs[2:, 1])   # top half
             # spans all rows
         
         for ax in (ax1, ax2, ax3):
@@ -354,12 +354,6 @@ def plot_running_activity_overview(activity,activity_details):
         
         ax4.set_xlabel('Time (seconds)')
 
-        # zones = [
-        #     (df["HR"] < 120).sum(),
-        #     ((df["HR"] >= 120) & (df["HR"] < 140)).sum(),
-        #     ((df["HR"] >= 140) & (df["HR"] < 160)).sum(),
-        #     (df["HR"] >= 160).sum(),
-        # ]
         zones = [
             activity['hrTimeInZone_1'],
             activity['hrTimeInZone_2'],
@@ -368,13 +362,7 @@ def plot_running_activity_overview(activity,activity_details):
             activity['hrTimeInZone_5']
         ]
 
-        # labels = [
-        #     "<120",
-        #     "120-140",
-        #     "140-160",
-        #     ">160",
-        # ]
-        
+
         labels = [
             "Zone 1",
             "Zone 2",
