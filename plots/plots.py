@@ -288,7 +288,7 @@ def plot_running_activity_overview(activity,activity_details):
         ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
 
         ax_summary = fig.add_subplot(gs[:1, 1])   # top half
-        ax_pie     = fig.add_subplot(gs[1:, 1])    # spans all rows
+        ax_pie     = fig.add_subplot(gs[2:, 1])    # spans all rows
         
         for ax in (ax1, ax2, ax3):
             ax.tick_params(labelbottom=False)
@@ -425,7 +425,6 @@ def plot_running_activity_overview(activity,activity_details):
                 value,
                 ha="right",
                 fontsize=12,
-                fontweight="bold",
             )
 
             y -= 0.13
