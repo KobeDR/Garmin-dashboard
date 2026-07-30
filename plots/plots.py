@@ -277,8 +277,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
         ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
 
-        ax_pie     = fig.add_subplot(gs[:2, 1])
-        ax_summary = fig.add_subplot(gs[2:, 1])   # top half
+        ax_pie     = fig.add_subplot(gs[:3, 1])
+        ax_summary = fig.add_subplot(gs[3, 1])   # top half
             # spans all rows
         
         for ax in (ax1, ax2, ax3):
@@ -394,7 +394,7 @@ def plot_running_activity_overview(activity,activity_details):
             ('Calories burned', calories)
         ]
 
-        y = 0.1
+        y = 0.9
 
         for label, value in stats:
 
