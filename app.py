@@ -84,10 +84,10 @@ else:
     
     if view == 'Daily':
         if month<10:
-            month = f'0{month}'
+            month2 = f'0{month}'
         if day<10:
-            day = f'0{day}'
-        date_ref = f"{year}-{month}-{day}"
+            day2 = f'0{day}'
+        date_ref = f"{year}-{month2}-{day2}"
         activities = client.get_activities_by_date(date_ref, date_ref)   
         activity_names = [
         f"{a['startTimeLocal'][11:16]} - {a['activityType']['typeKey']} - {a['activityName']}"
@@ -107,7 +107,11 @@ else:
             
             
             with activity_tab:
-                
+                if month<10:
+                    month = f'0{month}'
+                if day<10:
+                    day = f'0{day}'
+                date_ref = f"{year}-{month}-{day}"
                 
                 if len(activity_names)>0:
                     selected = st.sidebar.selectbox(
