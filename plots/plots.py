@@ -412,7 +412,7 @@ def plot_running_activity_overview(activity,activity_details):
         for label, value in stats:
 
             ax_summary.text(
-                0.05,
+                0.25,
                 y,
                 label,
                 fontsize=11,
@@ -420,7 +420,7 @@ def plot_running_activity_overview(activity,activity_details):
             )
 
             ax_summary.text(
-                0.95,
+                0.75,
                 y,
                 value,
                 ha="right",
@@ -477,14 +477,14 @@ def plot_running_activity_overview(activity,activity_details):
         )
 
         # Centre text
-        ax_pie.set_title("Time in HR Zones")
+        ax_pie.set_title("Time in HR Zones", fontsize = 15)
         ax_pie.text(
             0,
             0.05,
             str(timedelta(seconds=df['durationSeconds'].iloc[-1])),
             ha="center",
             va="center",
-            fontsize=20,
+            fontsize=15,
             fontweight="bold",
         )
 
@@ -494,7 +494,7 @@ def plot_running_activity_overview(activity,activity_details):
             "Total Time",
             ha="center",
             va="center",
-            fontsize=13,
+            fontsize=10,
             color="dimgray",
         )
 
