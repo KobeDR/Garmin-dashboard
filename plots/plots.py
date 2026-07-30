@@ -412,7 +412,7 @@ def plot_running_activity_overview(activity,activity_details):
             )
 
             ax_summary.text(
-                0.85,
+                0.75,
                 y,
                 value,
                 fontsize=12,
