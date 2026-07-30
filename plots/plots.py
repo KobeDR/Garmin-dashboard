@@ -678,7 +678,6 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         sleep_overall = ""
     try:
         slp_time = stats['sleepingSeconds']/60/60
-        slp_time =""
         sleep_time = f'{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} h'
     except:
         sleep_time = ""
@@ -755,9 +754,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ]
             
         zones = [
-                all_sleep['remPercentage']['value'],
-                all_sleep['lightPercentage']['value'],
-                all_sleep['deepPercentage']['value'],
+                sleep['sleepScores']['remPercentage']['value'],
+                sleep['sleepScores']['lightPercentage']['value'],
+                sleep['sleepScores']['deepPercentage']['value'],
         ]
         
         
