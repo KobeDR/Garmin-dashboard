@@ -231,7 +231,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
 
     return fig
 
-def plot_activity_overview(activity,activity_details):
+def plot_running_activity_overview(activity,activity_details):
     def pace_formatter(x, pos):
         minutes = int(x)
         seconds = int(round((x - minutes) * 60))

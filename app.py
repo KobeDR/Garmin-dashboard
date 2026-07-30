@@ -1,6 +1,6 @@
 import streamlit as st
 from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_client
-from plots.plots import plot_year_overview, plot_day_overview, plot_activity_overview
+from plots.plots import plot_year_overview, plot_day_overview, plot_running_activity_overview
 import datetime
 from datetime import date
 current_year = datetime.datetime.now().year
@@ -118,7 +118,7 @@ if view == 'Daily':
                     st.info('No running activity selected.')
 
                 else:
-                    fig_act = plot_activity_overview(activity,details)
+                    fig_act = plot_running_activity_overview(activity,details)
                     if isinstance(fig_act, bool):
                         st.info('No details found.')
                     else:
