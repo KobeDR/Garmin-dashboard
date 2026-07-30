@@ -1,6 +1,6 @@
 import streamlit as st
 from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_client
-from plots.plots_interactive import plot_year_overview,plot_day_overview2, plot_running_activity_overview
+from plots.plots import plot_year_overview,plot_day_overview2, plot_running_activity_overview
 import datetime
 from datetime import date
 current_year = datetime.datetime.now().year
@@ -108,7 +108,7 @@ else:
                 df_hr = get_day_hr_data(date, client, email)
                 df_stress = get_day_stress_data(date, client, email)
                 fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
-                st.plotly_chart(fig_day)
+                st.pyplot(fig_day)
             
             
             with activity_tab:
@@ -131,7 +131,7 @@ else:
                         if isinstance(fig_act, bool):
                             st.info('No details found.')
                         else:
-                            st.plotly_chart(fig_act)
+                            st.pyplot(fig_act)
                 except:
                     st.info('Problem occurred.')
 
@@ -139,7 +139,7 @@ else:
             df_hr = get_day_hr_data(date, client, email)
             df_stress = get_day_stress_data(date, client, email)
             fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
-            st.plotly_chart(fig_day)      
+            st.pyplot(fig_day)      
             
     else:
         year_tab = st.tabs([
@@ -148,5 +148,5 @@ else:
         with year_tab:
             df = get_year_data(year_ov, client, email)
             fig = plot_year_overview(df, year_ov)
-            st.plotly_chart(fig)
+            st.pyplot(fig)
 
