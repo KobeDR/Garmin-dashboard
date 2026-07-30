@@ -432,7 +432,7 @@ def plot_running_activity_overview(activity,activity_details):
             labels=labels,                 # legend elsewhere
             colors=colors,
             startangle=90,
-            counterclock=True,
+            counterclock=False,
             autopct="%1.0f%%",
 
             # <-- Move percentages outward
