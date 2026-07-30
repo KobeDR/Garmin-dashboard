@@ -289,7 +289,8 @@ def plot_running_activity_overview(activity,activity_details):
             ax1.fill_between(df['durationSeconds'], df['mpkm'], color = 'blue', alpha = 0.3)
             ax1.yaxis.set_major_formatter(FuncFormatter(pace_formatter))
             ymax = df["mpkm"].quantile(0.99)
-            ax1.set_ylim(0, ymax * 1.05)
+            ymin = df["mpkm"].quantile(0.01)
+            ax1.set_ylim(ymin*0.95, ymax * 1.05)
         except:
             print('Skipping HR')
         
@@ -305,7 +306,8 @@ def plot_running_activity_overview(activity,activity_details):
             ax2.plot(df['durationSeconds'], df['Cadence'], c = 'orange')
             ax2.fill_between(df['durationSeconds'], df['Cadence'], color = 'orange', alpha = 0.3)
             ymax = df["Cadence"].quantile(0.99)
-            ax2.set_ylim(0, ymax * 1.05)
+            ymin = df["Cadence"].quantile(0.01)
+            ax2.set_ylim(ymin*0.95, ymax * 1.05)
         except:
             print('Skipping cadence')
         
@@ -323,7 +325,8 @@ def plot_running_activity_overview(activity,activity_details):
             ax3.plot(df['durationSeconds'], df['HR'], c = 'red')
             ax3.fill_between(df['durationSeconds'], df['HR'], color = 'red', alpha = 0.3)
             ymax = df["HR"].quantile(0.99)
-            ax3.set_ylim(0, ymax * 1.05)
+            ymin = df["HR"].quantile(0.01)
+            ax3.set_ylim(ymin*0.95, ymax * 1.05)
             
             
         except:
@@ -344,7 +347,8 @@ def plot_running_activity_overview(activity,activity_details):
             ax4.plot(df['durationSeconds'], df['Temp'], c = 'purple')
             ax4.fill_between(df['durationSeconds'], df['Temp'], color = 'purple', alpha = 0.3)
             ymax = df["Temp"].quantile(0.99)
-            ax4.set_ylim(0, ymax * 1.05)
+            ymin = df["Temp"].quantile(0.01)
+            ax4.set_ylim(ymin*0.95, ymax * 1.05)
         except:
             print('Skipping Temp')
             
