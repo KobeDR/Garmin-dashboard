@@ -658,11 +658,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     
     ax4.set_ylabel('Time')
-    try: 
-        slp_time = stats['sleepingSeconds']/60/60
-        fig.suptitle(f"{day} {mon} {year}\n{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} hours slept - {round(stats['activeKilocalories'])} active calories burned")
-    except:
-        fig.suptitle(f"{day} {mon} {year}")
+    
+    fig.suptitle(f"{day} {mon} {year}")
     
     
     ax_summary.axis("off")
@@ -675,45 +672,74 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
     
     try:
-        avg_pace = f"{int(activity['averageSpeed']**-1 * 1000 // 60)}:{int((1000/activity['averageSpeed']) % 60):02d} min/km"
-        max_pace = f"{int(activity['maxSpeed']**-1 * 1000 // 60)}:{int((1000/activity['maxSpeed']) % 60):02d} min/km"
-        avg_hr = f"{activity['averageHR']} bpm"
-        max_hr = f"{activity['maxHR']} bpm"
-        elev = f"{activity['elevationGain']:.0f} m"
-        vO2MaxValue = f"{activity['vO2MaxValue']:.0f}"
-        calories = f"{activity['calories']:.0f}"
-        stats = [
-            ("Average pace", avg_pace),
-            ("Max pace", max_pace),
-            ("Average HR", avg_hr),
-            ("Max HR", max_hr),
-            ("Elevation gain", elev),
-            ('vO2Max', vO2MaxValue),
-            ('Calories burned', calories)
-        ]
-
-        y = 0.9
-
-        for label, value in stats:
-
-            ax_summary.text(
-                0.2,
-                y,
-                label,
-                fontsize=11,
-                color="gray",
-            )
-
-            ax_summary.text(
-                0.7,
-                y,
-                value,
-                fontsize=12,
-            )
-
-            y -= 0.2
+        sleep_overall = f"{sleep['dailySleepDTO']['sleepScores']['overall']['value']} - {sleep['dailySleepDTO']['sleepScores']['overall']['qualifierKey']}"
     except:
-        print("Pass summary")
+        sleep_overall = ""
+    try:
+        slp_time = stats['sleepingSeconds']/60/60
+        slp_time =""
+        sleep_time = f'{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} h'
+    except:
+        sleep_time = ""
+    try:
+        sleep_awakecount = sleep['dailySleepDTO']['sleepScores']['awakeCount']['qualifierKey']
+    except:
+        sleep_awakecount=""
+    try:
+        sleep_restlessness = sleep['dailySleepDTO']['sleepScores']['restlessness']['qualifierKey']
+    except:
+        sleep_restlessness = ""
+    try:
+        sleep_stress = sleep['dailySleepDTO']['sleepScores']['stress']['qualifierKey']
+    except:
+        sleep_stress = ""
+    try:
+        avg_hr = f"{np.mean(df_hr['HR'])} bpm"
+    except:
+        avg_hr = ""
+    try:
+        max_hr = f"{np.max(df_hr['HR'])} bpm"
+    except:
+        max_hr = ""    
+    try:
+        activekcal = f"{round(stats['activeKilocalories'])} calories"
+    except:
+        activekcal = ""        
+
+        
+    stats = [
+        ("Average HR", avg_hr),
+        ("Max HR", max_hr),
+        ('Active calories burned', activekcal),
+        ("Overall sleep score", sleep_overall),
+        ("Sleep time", sleep_time),
+        ('Sleep stress', sleep_stress),
+        ('Sleep awakeness', sleep_awakecount),
+        ('Sleep restlessness', sleep_restlessness),
+        
+    ]
+
+    y = 0.9
+
+    for label, value in stats:
+
+        ax_summary.text(
+            0.2,
+            y,
+            label,
+            fontsize=11,
+            color="gray",
+        )
+
+        ax_summary.text(
+            0.7,
+            y,
+            value,
+            fontsize=12,
+        )
+
+        y -= 0.2
+
 
 
 
@@ -722,28 +748,22 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     try:
         colors = [
-                    "#4F7FD9",  # Zone 1
-                    "#5DAA68",  # Zone 2
-                    "#FF8C1A",  # Zone 3
-                    "#D83A34",  # Zone 4
-                    "#7E3FA3",  # Zone 5
-            ]
+                "#4F7FD9",  # Zone 1
+                "#FF8C1A",  # Zone 3
+                "#D83A34",  # Zone 4
+        ]
             
         zones = [
-                activity['hrTimeInZone_1'],
-                activity['hrTimeInZone_2'],
-                activity['hrTimeInZone_3'],
-                activity['hrTimeInZone_4'],
-                activity['hrTimeInZone_5']
-            ]
+                sleep['remPercentage']['value'],
+                sleep['lightPercentage']['value'],
+                sleep['deepPercentage']['value'],
+        ]
         
         
         labels = [
-            "Zone 1",
-            "Zone 2",
-            "Zone 3",
-            "Zone 4",
-            "Zone 5"
+            "REM",
+            "Light",
+            "Deep"
         ]
         
         wedges, texts, autotexts = ax_pie.pie(
