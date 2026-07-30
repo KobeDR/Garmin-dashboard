@@ -392,35 +392,19 @@ def plot_running_activity_overview(activity,activity_details):
 
         ax_summary.axis("off")
         
-        avg_pace = f"{pace_formatter_fun(activity['averageSpeed'])} /km"
+        avg_pace = f"{pace_formatter_fun(activity['averageSpeed'])} min/km"
         avg_hr = f"{activity['averageHR']} bpm"
         max_hr = f"{activity['maxHR']} bpm"
         elev = f"{activity['elevationGain']:.0f} m"
 
         duration = str(timedelta(seconds=int(activity["duration"])))
 
-        ax_summary.text(
-            0.5, 0.95,
-            duration,
-            ha="center",
-            va="top",
-            fontsize=24,
-            fontweight="bold",
-        )
-
-        ax_summary.text(
-            0.5, 0.83,
-            "Moving Time",
-            ha="center",
-            fontsize=11,
-            color="gray",
-        )
 
         stats = [
-            ("Avg Pace", avg_pace),
-            ("Avg HR", avg_hr),
+            ("Average Pace", avg_pace),
+            ("Average HR", avg_hr),
             ("Max HR", max_hr),
-            ("Elev Gain", elev),
+            ("Elevation Gain", elev),
         ]
 
         y = 0.62
@@ -479,9 +463,17 @@ def plot_running_activity_overview(activity,activity_details):
             # <-- White percentages
             textprops={
                 "color":"white",
-                "fontsize":15,
+                "fontsize":10,
                 "fontweight":"bold",
             },
+        )
+        ax_pie.legend(
+            wedges,
+            labels,
+            title="HR Zones",
+            loc="center left",
+            bbox_to_anchor=(1.05, 0.5),
+            frameon=False,
         )
 
         # Centre text
@@ -492,7 +484,7 @@ def plot_running_activity_overview(activity,activity_details):
             str(timedelta(seconds=df['durationSeconds'].iloc[-1])),
             ha="center",
             va="center",
-            fontsize=24,
+            fontsize=20,
             fontweight="bold",
         )
 
