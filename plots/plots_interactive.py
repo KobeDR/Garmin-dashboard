@@ -30,7 +30,8 @@ def _add_activity_spans(fig, activities, row, col):
 def _add_timeseries(fig, x, y, row, color, name, fill=False, col=1):
     fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name=name,
                              line=dict(color=color),
-                             fill='tozeroy' if fill else None),
+                             fill='tozeroy' if fill else None,
+                             showlegend=False),
                   row=row, col=col)
     if fill:
         fig.data[-1].update(fillcolor={
@@ -42,11 +43,12 @@ def _add_timeseries(fig, x, y, row, color, name, fill=False, col=1):
 
 def _daily_layout(fig, title):
     fig.update_layout(template='plotly_white', width=1600, height=600,
-                      title=dict(text=title, x=.5), showlegend=False,
+                      title=dict(text=title, x=.5, font=dict(color='#111111')), showlegend=False,
+                      font=dict(color='#111111'),
                       paper_bgcolor='white', plot_bgcolor='white',
                       margin=dict(l=60, r=60, t=70, b=60))
-    fig.update_xaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickformat='%H:%M')
-    fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)')
+    fig.update_xaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickformat='%H:%M', tickfont=dict(color='#111111'), title_font=dict(color='#111111'))
+    fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickfont=dict(color='#111111'), title_font=dict(color='#111111'))
 
 
 def plot_year_overview(df, year):
@@ -158,7 +160,10 @@ def plot_running_activity_overview(activity,activity_details):
         except Exception: print('Fail')
     df = pd.DataFrame(di)
     fig = make_subplots(rows=4, cols=2, shared_xaxes=True,
-                        specs=[[{}, {'type':'domain', 'rowspan':3}], [{}, None], [{}, None], [{}, {}]],
+                        specs=[[{'secondary_y': True}, {'type':'domain', 'rowspan':3}],
+                               [{'secondary_y': True}, None],
+                               [{'secondary_y': True}, None],
+                               [{'secondary_y': True}, {}]],
                         vertical_spacing=.07, horizontal_spacing=.12)
     duration = df['durationSeconds']
     for row, column, color, label in ((1, 'HR', 'red', 'HR (bpm)'), (2, 'mpkm', 'blue', 'Speed (min/km)'),
@@ -170,13 +175,16 @@ def plot_running_activity_overview(activity,activity_details):
             fig.update_yaxes(range=[0, 100], title_text=label, row=row, col=1); print(f'Skipping {column}')
         try:
             fig.add_trace(go.Scatter(x=duration, y=df['ElevationMeters'], mode='lines', line=dict(color='rgba(100,100,100,0)'),
-                                     fill='tozeroy', fillcolor='rgba(128,128,128,.3)', showlegend=False), row=row, col=1)
+                                     fill='tozeroy', fillcolor='rgba(128,128,128,.3)', showlegend=False),
+                          row=row, col=1, secondary_y=True)
+            fig.update_yaxes(range=[0, np.max(df['ElevationMeters']) + 20], showticklabels=False,
+                             showgrid=False, secondary_y=True, row=row, col=1)
         except Exception: pass
     fig.update_xaxes(title_text='Time (seconds)', row=4, col=1)
     try: zones = [activity[f'hrTimeInZone_{i}'] for i in range(1, 6)]; labels = [f'Zone {i}' for i in range(1, 6)]; colors = ['#4F7FD9','#5DAA68','#FF8C1A','#D83A34','#7E3FA3']
     except Exception: zones, labels, colors = [100], ['No data'], ['grey']
     fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors),
-                         textinfo='percent', textfont=dict(color='white'), name='HR Zones'), row=1, col=2)
+                         textinfo='percent', textfont=dict(color='#111111', size=16), name='HR Zones'), row=1, col=2)
     values = []
     for label, key, formatter in [('Average pace', 'averageSpeed', lambda v: f"{int(1000/v//60)}:{int((1000/v)%60):02d} min/km"),
                                   ('Max pace', 'maxSpeed', lambda v: f"{int(1000/v//60)}:{int((1000/v)%60):02d} min/km"),
@@ -186,13 +194,15 @@ def plot_running_activity_overview(activity,activity_details):
         try: values.append(f'<b>{label}</b>: {formatter(activity[key])}')
         except Exception: values.append(f'<b>{label}</b>:')
     fig.add_annotation(text='<br>'.join(values), x=.75, y=.105, xref='paper', yref='paper', showarrow=False,
-                       align='left', xanchor='center', yanchor='middle')
-    fig.add_annotation(text='Time in HR Zones', x=.75, y=.98, xref='paper', yref='paper', showarrow=False,
-                       font=dict(size=16))
-    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:10px'>Total Time</span>", x=.75, y=.61, xref='paper', yref='paper', showarrow=False)
-    fig.update_layout(template='plotly_white', width=1600, height=700, showlegend=False,
+                       align='left', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
+    fig.add_annotation(text='Time in HR Zones', x=.75, y=1.015, xref='paper', yref='paper', showarrow=False,
+                       yanchor='bottom', font=dict(size=20, color='#111111'))
+    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:13px'>Total Time</span>", x=.75, y=.61, xref='paper', yref='paper', showarrow=False, font=dict(size=18, color='#111111'))
+    fig.update_layout(template='plotly_white', width=1600, height=700, showlegend=True,
+                      font=dict(color='#111111'), legend=dict(x=1.01, y=.77, font=dict(size=14, color='#111111')),
                       paper_bgcolor='white', plot_bgcolor='white',
-                      title=dict(text=f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}", x=.5))
+                      margin=dict(l=60, r=190, t=95, b=60),
+                      title=dict(text=f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}", x=.5, font=dict(color='#111111')))
     fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', col=1)
     return fig
 
@@ -235,7 +245,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     if limits: fig.update_xaxes(range=[min(limits), max(limits)], col=1)
     try: zones = [sleep['sleepScores'][name]['value'] for name in ('remPercentage','lightPercentage','deepPercentage')]; labels = ['REM','Light','Deep']; colors = ['#4F7FD9','#FF8C1A','#D83A34']
     except Exception: zones, labels, colors = [100], ['No data'], ['grey']
-    fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors), textinfo='percent', textfont=dict(color='white')), row=1, col=2)
+    fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors),
+                         textinfo='percent', textfont=dict(color='#111111', size=16), name='Sleep zones'), row=1, col=2)
     summary = []
     try: summary.append(f"<b>Average HR</b>: {round(np.mean(df_hr['HR']))} bpm")
     except Exception: pass
@@ -246,9 +257,10 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     for label, value in [('Active calories burned', stats.get('activeKilocalories')), ('Overall sleep score', sleep.get('sleepScores',{}).get('overall',{}).get('value')), ('Sleep stress', sleep.get('sleepScores',{}).get('stress',{}).get('qualifierKey'))]:
         if value is not None: summary.append(f'<b>{label}</b>: {value}')
     fig.add_annotation(text='<br>'.join(summary), x=.75, y=.105, xref='paper', yref='paper', showarrow=False,
-                       align='left', xanchor='center', yanchor='middle')
-    fig.add_annotation(text='Sleep analysis', x=.75, y=.98, xref='paper', yref='paper', showarrow=False,
-                       font=dict(size=16))
+                       align='left', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
+    fig.add_annotation(text='Sleep analysis', x=.75, y=1.015, xref='paper', yref='paper', showarrow=False,
+                       yanchor='bottom', font=dict(size=20, color='#111111'))
     _daily_layout(fig, f'{day} {mon} {year}')
-    fig.update_layout(height=700)
+    fig.update_layout(height=700, showlegend=True, legend=dict(x=1.01, y=.77, font=dict(size=14, color='#111111')),
+                      margin=dict(l=60, r=190, t=95, b=60))
     return fig
