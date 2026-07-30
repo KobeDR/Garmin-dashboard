@@ -695,11 +695,11 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     except:
         sleep_stress = ""
     try:
-        avg_hr = f"{np.mean(df_hr['HR'])} bpm"
+        avg_hr = f"{round(np.mean(df_hr['HR']))} bpm"
     except:
         avg_hr = ""
     try:
-        max_hr = f"{np.max(df_hr['HR'])} bpm"
+        max_hr = f"{round(np.max(df_hr['HR']))} bpm"
     except:
         max_hr = ""    
     try:
@@ -709,7 +709,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
         
     stats = [
-        ("Average HR", round(avg_hr, 2)),
+        ("Average HR", avg_hr),
         ("Max HR", max_hr),
         ('Active calories burned', activekcal),
         ("Overall sleep score", sleep_overall),
