@@ -1,6 +1,6 @@
 import streamlit as st
 from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_client
-from plots.plots import plot_year_overview, plot_day_overview, plot_running_activity_overview
+from plots.plots import plot_year_overview, plot_day_overview,plot_day_overview2, plot_running_activity_overview
 import datetime
 from datetime import date
 current_year = datetime.datetime.now().year
@@ -80,7 +80,7 @@ if view == 'Daily':
     with day_tab:
         df_hr = get_day_hr_data(date, client, email)
         df_stress = get_day_stress_data(date, client, email)
-        fig_day = plot_day_overview(df_hr, df_stress, year, month, day, client)
+        fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
         st.pyplot(fig_day, use_container_width=True)
     
     
