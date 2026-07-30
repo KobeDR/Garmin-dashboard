@@ -14,7 +14,7 @@ def plot_year_overview(df, year):
     fig, axs = plt.subplots(
         5,
         2,
-        figsize=(12,15),dpi = 1000,
+        figsize=(12,15),dpi = 200,
         sharex=True
     )
 
@@ -73,7 +73,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
         2,
         2,
-        figsize=(16, 6),dpi = 1000,
+        figsize=(16, 8),dpi = 200,
         sharex = True
     )
     if month<10:
@@ -278,7 +278,7 @@ def plot_running_activity_overview(activity,activity_details):
             print('Fail')
         
         df = pd.DataFrame(di)
-        fig = plt.figure(figsize=(16, 6), dpi=200)
+        fig = plt.figure(figsize=(16, 8), dpi=200)
 
         gs = GridSpec(
             4,
@@ -592,7 +592,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     xlims_max = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     mon = month_names[month-1]
-    fig = plt.figure(figsize=(16, 6), dpi=200)
+    fig = plt.figure(figsize=(16, 8), dpi=200)
     
     gs = GridSpec(
         4,
