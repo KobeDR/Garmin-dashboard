@@ -376,7 +376,7 @@ def plot_running_activity_overview(activity,activity_details):
 
         wedges, texts, autotexts = ax_pie.pie(
             zones,
-            labels=None,                 # legend elsewhere
+            labels=labels,                 # legend elsewhere
             colors=colors,
             startangle=90,
             counterclock=True,
@@ -401,6 +401,7 @@ def plot_running_activity_overview(activity,activity_details):
         )
 
         # Centre text
+        ax_pie.set_title("Time in HR Zones")
         ax_pie.text(
             0,
             0.05,
