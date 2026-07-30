@@ -375,11 +375,19 @@ def plot_running_activity_overview(activity,activity_details):
             activity['hrTimeInZone_5']
         ]
 
+        # labels = [
+        #     "<120",
+        #     "120-140",
+        #     "140-160",
+        #     ">160",
+        # ]
+        
         labels = [
-            "<120",
-            "120-140",
-            "140-160",
-            ">160",
+            "Zone 1",
+            "Zone 2",
+            "Zone 3",
+            "Zone 4",
+            "Zone 5"
         ]
 
         ax_summary.axis("off")
