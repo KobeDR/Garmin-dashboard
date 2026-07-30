@@ -254,7 +254,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors),
                          textinfo='percent', textfont=dict(color='white', size=16), name='Sleep zones'), row=1, col=2)
     pie_domain = fig.data[-1].domain
-    pie_center = (sum(pie_domain.x) / 2)+0.2
+    pie_center = (sum(pie_domain.x) / 2)+0.01
     summary = []
     try: summary.append(f"<b>Average HR</b>: {round(np.mean(df_hr['HR']))} bpm")
     except Exception: pass
