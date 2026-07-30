@@ -404,7 +404,7 @@ def plot_running_activity_overview(activity,activity_details):
         ax_pie.text(
             0,
             0.05,
-            time_str = str(timedelta(seconds=df['durationSeconds'].iloc[-1])),
+            str(timedelta(seconds=df['durationSeconds'].iloc[-1])),
             ha="center",
             va="center",
             fontsize=24,
