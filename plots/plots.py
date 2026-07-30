@@ -540,8 +540,11 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     x = [i for i,j in zip(x, y) if np.isfinite(j)]
     x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
     y = [i for i in y if np.isfinite(i)]
-    xlims_min.append(x[0])
-    xlims_max.append(x[-1])
+    try:
+        xlims_min.append(x[0])
+        xlims_max.append(x[-1])
+    except:
+        print('Fail')
     
     
     ax1.plot(x,y, c= 'red')
@@ -590,8 +593,11 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
     y = [i for i in y if np.isfinite(i)]
     
-    xlims_min.append(x[0])
-    xlims_max.append(x[-1])
+    try:
+        xlims_min.append(x[0])
+        xlims_max.append(x[-1])
+    except:
+        print('Fail')
     ax2.plot(x,y, c= 'orange')
     ax2.fill_between(x,y, alpha=.3, color= 'orange')
     try:
