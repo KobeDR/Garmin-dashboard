@@ -54,9 +54,8 @@ else:
     password = st.session_state.password
     client = st.session_state.client
     with st.sidebar.form("plot_form1"):
-        st.header('View')
         view = st.radio(
-            "",
+            "View",
             ['Daily', 'Yearly']
         )
         if view == 'Daily':
@@ -85,68 +84,68 @@ else:
     
     
     
-    if view == 'Daily':
-        day_tab, activity_tab = st.tabs([
-            "Daily",
-            "Activity"
-            ]) 
-        
-        with day_tab:
-            df_hr = get_day_hr_data(date, client, email)
-            df_stress = get_day_stress_data(date, client, email)
-            fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
-            st.pyplot(fig_day, use_container_width=True)
-        
-        
-        with activity_tab:
-            if month<10:
-                month = f'0{month}'
-            if day<10:
-                day = f'0{day}'
-            date_ref = f"{year}-{month}-{day}"
-            activities = client.get_activities_by_date(date_ref, date_ref)
+        if view == 'Daily':
+            day_tab, activity_tab = st.tabs([
+                "Daily",
+                "Activity"
+                ]) 
             
-            activity_names = [
-            f"{a['startTimeLocal'][11:16]} - {a['activityType']['typeKey']} - {a['activityName']}"
-            for a in activities
-            ]
-            if len(activity_names)>0:
-                selected = st.sidebar.selectbox(
-                "Activity",
-                activity_names, index = 0
-                )
-            else:
-                selected = 'None'
+            with day_tab:
+                df_hr = get_day_hr_data(date, client, email)
+                df_stress = get_day_stress_data(date, client, email)
+                fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
+                st.pyplot(fig_day, use_container_width=True)
+            
+            
+            with activity_tab:
+                if month<10:
+                    month = f'0{month}'
+                if day<10:
+                    day = f'0{day}'
+                date_ref = f"{year}-{month}-{day}"
+                activities = client.get_activities_by_date(date_ref, date_ref)
+                
+                activity_names = [
+                f"{a['startTimeLocal'][11:16]} - {a['activityType']['typeKey']} - {a['activityName']}"
+                for a in activities
+                ]
+                if len(activity_names)>0:
+                    selected = st.sidebar.selectbox(
+                    "Activity",
+                    activity_names, index = 0
+                    )
+                else:
+                    selected = 'None'
 
-            if selected != "None":
-                idx = activity_names.index(selected)
-                activity = activities[idx]
+                if selected != "None":
+                    idx = activity_names.index(selected)
+                    activity = activities[idx]
 
-                activity_id = activity["activityId"]
+                    activity_id = activity["activityId"]
 
-                details = client.get_activity_details(activity_id)
-                try:
-                    if activity['activityType']['typeKey'] != 'running':
-                        st.info('No running activity selected.')
+                    details = client.get_activity_details(activity_id)
+                    try:
+                        if activity['activityType']['typeKey'] != 'running':
+                            st.info('No running activity selected.')
 
-                    else:
-                        fig_act = plot_running_activity_overview(activity,details)
-                        if isinstance(fig_act, bool):
-                            st.info('No details found.')
                         else:
-                            st.pyplot(fig_act, use_container_width=True)
-                except:
-                    st.info('Problem occurred.')
-            else:
-                activity = None
-                st.info("No activity selected.")            
-            
-    else:
-        year_tab = st.tabs([
-                "Year",
-                ])[0]
-        with year_tab:
-            df = get_year_data(year_ov, client, email)
-            fig = plot_year_overview(df, year_ov)
-            st.pyplot(fig, use_container_width=True)
+                            fig_act = plot_running_activity_overview(activity,details)
+                            if isinstance(fig_act, bool):
+                                st.info('No details found.')
+                            else:
+                                st.pyplot(fig_act, use_container_width=True)
+                    except:
+                        st.info('Problem occurred.')
+                else:
+                    activity = None
+                    st.info("No activity selected.")            
+                
+        else:
+            year_tab = st.tabs([
+                    "Year",
+                    ])[0]
+            with year_tab:
+                df = get_year_data(year_ov, client, email)
+                fig = plot_year_overview(df, year_ov)
+                st.pyplot(fig, use_container_width=True)
 
