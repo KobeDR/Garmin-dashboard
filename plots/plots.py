@@ -287,8 +287,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
         ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
 
-        ax_summary = fig.add_subplot(gs[:2, 1])   # top half
-        ax_pie     = fig.add_subplot(gs[2:, 1])    # spans all rows
+        ax_summary = fig.add_subplot(gs[:1, 1])   # top half
+        ax_pie     = fig.add_subplot(gs[1:, 1])    # spans all rows
         
         for ax in (ax1, ax2, ax3):
             ax.tick_params(labelbottom=False)
@@ -412,7 +412,7 @@ def plot_running_activity_overview(activity,activity_details):
         for label, value in stats:
 
             ax_summary.text(
-                0.25,
+                0.15,
                 y,
                 label,
                 fontsize=11,
@@ -420,7 +420,7 @@ def plot_running_activity_overview(activity,activity_details):
             )
 
             ax_summary.text(
-                0.75,
+                0.85,
                 y,
                 value,
                 ha="right",
