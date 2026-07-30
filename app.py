@@ -107,7 +107,7 @@ else:
             with day_tab:
                 df_hr = get_day_hr_data(date, client, email)
                 df_stress = get_day_stress_data(date, client, email)
-                fig_day = plot_day_overview2(df_hr, df_stress, year, month_reformatted, day_reformatted, client)
+                fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
                 st.pyplot(fig_day, use_container_width=True)
             
             
@@ -138,7 +138,7 @@ else:
         else:
             df_hr = get_day_hr_data(date, client, email)
             df_stress = get_day_stress_data(date, client, email)
-            fig_day = plot_day_overview2(df_hr, df_stress, year, month_reformatted, day_reformatted, client)
+            fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
             st.pyplot(fig_day, use_container_width=True)      
             
     else:
