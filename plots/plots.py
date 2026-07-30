@@ -411,7 +411,7 @@ def plot_running_activity_overview(activity,activity_details):
         for label, value in stats:
 
             ax_summary.text(
-                0.15,
+                0.2,
                 y,
                 label,
                 fontsize=11,
@@ -419,7 +419,7 @@ def plot_running_activity_overview(activity,activity_details):
             )
 
             ax_summary.text(
-                0.65,
+                0.7,
                 y,
                 value,
                 fontsize=12,
