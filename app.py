@@ -108,7 +108,7 @@ else:
                 df_hr = get_day_hr_data(date, client, email)
                 df_stress = get_day_stress_data(date, client, email)
                 fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
-                st.pyplot(fig_day, use_container_width=True)
+                st.pyplot(fig_day)
             
             
             with activity_tab:
@@ -131,7 +131,7 @@ else:
                         if isinstance(fig_act, bool):
                             st.info('No details found.')
                         else:
-                            st.pyplot(fig_act, use_container_width=True)
+                            st.pyplot(fig_act)
                 except:
                     st.info('Problem occurred.')
 
@@ -139,7 +139,7 @@ else:
             df_hr = get_day_hr_data(date, client, email)
             df_stress = get_day_stress_data(date, client, email)
             fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
-            st.pyplot(fig_day, use_container_width=True)      
+            st.pyplot(fig_day)      
             
     else:
         year_tab = st.tabs([
@@ -148,5 +148,5 @@ else:
         with year_tab:
             df = get_year_data(year_ov, client, email)
             fig = plot_year_overview(df, year_ov)
-            st.pyplot(fig, use_container_width=True)
+            st.pyplot(fig)
 
