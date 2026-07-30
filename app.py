@@ -115,7 +115,7 @@ if view == 'Daily':
             
             try:
                 if activity['activityType']['typeKey'] != 'running':
-                    st.info('No running event found.')
+                    st.info('No running activity selected.')
 
                 else:
                     fig_act = plot_activity_overview(activity,details)
