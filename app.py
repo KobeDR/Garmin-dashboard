@@ -36,6 +36,9 @@ if not st.session_state.logged_in:
         st.session_state.initial_press = True
         st.session_state.logged_in = True
         st.rerun()
+    if not email or not password:
+        st.info("Please enter your Garmin email and password in the sidebar.")
+        st.stop()
 else:
     with st.sidebar.form("plot_form1"):
         st.header('View')
@@ -65,9 +68,7 @@ else:
                 step=1,
             )
         
-    if not email or not password:
-        st.info("Please enter your Garmin email and password in the sidebar.")
-        st.stop()
+    
     info1 = st.info(f"Logging in {email}...")
     if ("client" not in st.session_state):
         client = get_client(email, password)
