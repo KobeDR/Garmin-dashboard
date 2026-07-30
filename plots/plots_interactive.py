@@ -43,6 +43,7 @@ def _add_timeseries(fig, x, y, row, color, name, fill=False, col=1):
 def _daily_layout(fig, title):
     fig.update_layout(template='plotly_white', width=1600, height=600,
                       title=dict(text=title, x=.5), showlegend=False,
+                      paper_bgcolor='white', plot_bgcolor='white',
                       margin=dict(l=60, r=60, t=70, b=60))
     fig.update_xaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickformat='%H:%M')
     fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)')
@@ -87,6 +88,62 @@ def plot_year_overview(df, year):
     return fig
 
 
+def plot_day_overview(df_hr, df_stress, year, month, day, client):
+    month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    mon = month_names[month-1]
+    date_ref = f"{year}-{month:02d}-{day:02d}"
+    stats = client.get_stats(date_ref)
+    fig = make_subplots(rows=2, cols=2, shared_xaxes=True,
+                        vertical_spacing=.12, horizontal_spacing=.08)
+    activities = client.get_activities_by_date(date_ref, date_ref)
+    try:
+        sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
+        start_sleep = datetime.fromtimestamp(sleep['sleepStartTimestampGMT']/1000) + timedelta(hours=2)
+        end_sleep = datetime.fromtimestamp(sleep['sleepEndTimestampGMT']/1000) + timedelta(hours=2)
+    except Exception:
+        start_sleep = end_sleep = None; print('Sleep skipped')
+    for data, value_col, row, col, color, label in ((df_hr, 'HR', 1, 1, 'black', 'HR (BPM)'),
+                                                      (df_stress, 'Stress', 1, 2, 'black', 'Stress %')):
+        raw_x = [datetime.fromtimestamp(int(v)/1000) + timedelta(hours=2) for v in data['Timepoint']]
+        x, y = _finite_xy(raw_x, data[value_col])
+        raw_timestamps = [int(v)/1000 for v in data['Timepoint']]
+        timestamps, _ = _finite_xy(raw_timestamps, data[value_col])
+        _add_timeseries(fig, x, y, row, color, label, col=col)
+        try:
+            xs, ys = smooth(timestamps, y)
+            xs = [datetime.fromtimestamp(int(round(v))) + timedelta(hours=2) for v in xs]
+            _add_timeseries(fig, xs, ys, row, 'red', 'Smoothed', col=col)
+        except Exception:
+            print('Smoothing skipped')
+        if y: fig.add_hline(y=float(np.mean(y)), line_dash='dash', line_color='blue', row=row, col=col)
+        if start_sleep: _add_span(fig, start_sleep, end_sleep, 'gray', row, col)
+        _add_activity_spans(fig, activities, row, col)
+        fig.update_yaxes(title_text=label, row=row, col=col)
+    try:
+        steps_df = pd.DataFrame(client.get_steps_data(date_ref))
+        steps_df['startGMT'] = pd.to_datetime(steps_df['startGMT']) + timedelta(hours=2)
+        steps_df['steps_cumsum'] = steps_df['steps'].cumsum()
+        _add_timeseries(fig, steps_df['startGMT'], steps_df['steps_cumsum'], 2, 'blue', '# Steps', True, 1)
+        fig.update_yaxes(title_text='# Steps', range=[0, steps_df['steps_cumsum'].iloc[-1]+3000], row=2, col=1)
+        if start_sleep: _add_span(fig, start_sleep, end_sleep, 'gray', 2, 1)
+        _add_activity_spans(fig, activities, 2, 1)
+    except Exception: print('Steps skipped.')
+    try:
+        bb_df = pd.DataFrame(client.get_body_battery(date_ref)[0]['bodyBatteryValuesArray'], columns=['Timepoint', 'BB'])
+        bb_df['Timepoint'] = [datetime.fromtimestamp(v/1000) + timedelta(hours=2) for v in bb_df['Timepoint']]
+        _add_timeseries(fig, bb_df['Timepoint'], bb_df['BB'], 2, 'purple', 'Body battery %', True, 2)
+        fig.update_yaxes(title_text='Body battery %', range=[0, 100], row=2, col=2)
+        if start_sleep: _add_span(fig, start_sleep, end_sleep, 'gray', 2, 2)
+        _add_activity_spans(fig, activities, 2, 2)
+    except Exception: print('Body battery skipped.')
+    try:
+        slp_time = stats['sleepingSeconds']/3600
+        subtitle = f"<br>{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} hours slept - {round(stats['activeKilocalories'])} active calories burned"
+    except Exception: subtitle = ''
+    _daily_layout(fig, f"{day} {mon} {year}{subtitle}")
+    return fig
+
+
 def plot_running_activity_overview(activity,activity_details):
     if not activity_details['detailsAvailable']:
         return False
@@ -101,7 +158,7 @@ def plot_running_activity_overview(activity,activity_details):
         except Exception: print('Fail')
     df = pd.DataFrame(di)
     fig = make_subplots(rows=4, cols=2, shared_xaxes=True,
-                        specs=[[{}, {'type':'domain'}], [{}, {'type':'domain'}], [{}, {'type':'domain'}], [{}, {'type':'xy'}]],
+                        specs=[[{}, {'type':'domain', 'rowspan':3}], [{}, None], [{}, None], [{}, {}]],
                         vertical_spacing=.07, horizontal_spacing=.12)
     duration = df['durationSeconds']
     for row, column, color, label in ((1, 'HR', 'red', 'HR (bpm)'), (2, 'mpkm', 'blue', 'Speed (min/km)'),
@@ -128,9 +185,13 @@ def plot_running_activity_overview(activity,activity_details):
                                   ('Calories burned', 'calories', lambda v: f'{v:.0f}')]:
         try: values.append(f'<b>{label}</b>: {formatter(activity[key])}')
         except Exception: values.append(f'<b>{label}</b>:')
-    fig.add_annotation(text='<br>'.join(values), x=.84, y=.13, xref='paper', yref='paper', showarrow=False, align='left')
-    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:10px'>Total Time</span>", x=.75, y=.75, xref='paper', yref='paper', showarrow=False)
+    fig.add_annotation(text='<br>'.join(values), x=.75, y=.105, xref='paper', yref='paper', showarrow=False,
+                       align='left', xanchor='center', yanchor='middle')
+    fig.add_annotation(text='Time in HR Zones', x=.75, y=.98, xref='paper', yref='paper', showarrow=False,
+                       font=dict(size=16))
+    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:10px'>Total Time</span>", x=.75, y=.61, xref='paper', yref='paper', showarrow=False)
     fig.update_layout(template='plotly_white', width=1600, height=700, showlegend=False,
+                      paper_bgcolor='white', plot_bgcolor='white',
                       title=dict(text=f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}", x=.5))
     fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', col=1)
     return fig
@@ -141,7 +202,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     mon = month_names[month-1]; date_ref = f"{year}-{month:02d}-{day:02d}"
     stats = client.get_stats(date_ref)
     fig = make_subplots(rows=4, cols=2, shared_xaxes=True,
-                        specs=[[{}, {'type':'domain'}], [{}, {'type':'domain'}], [{}, {'type':'domain'}], [{}, {'type':'xy'}]],
+                        specs=[[{}, {'type':'domain', 'rowspan':3}], [{}, None], [{}, None], [{}, {}]],
                         vertical_spacing=.07, horizontal_spacing=.12)
     activities = client.get_activities_by_date(date_ref, date_ref)
     try:
@@ -184,7 +245,10 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     except Exception: pass
     for label, value in [('Active calories burned', stats.get('activeKilocalories')), ('Overall sleep score', sleep.get('sleepScores',{}).get('overall',{}).get('value')), ('Sleep stress', sleep.get('sleepScores',{}).get('stress',{}).get('qualifierKey'))]:
         if value is not None: summary.append(f'<b>{label}</b>: {value}')
-    fig.add_annotation(text='<br>'.join(summary), x=.84, y=.13, xref='paper', yref='paper', showarrow=False, align='left')
+    fig.add_annotation(text='<br>'.join(summary), x=.75, y=.105, xref='paper', yref='paper', showarrow=False,
+                       align='left', xanchor='center', yanchor='middle')
+    fig.add_annotation(text='Sleep analysis', x=.75, y=.98, xref='paper', yref='paper', showarrow=False,
+                       font=dict(size=16))
     _daily_layout(fig, f'{day} {mon} {year}')
     fig.update_layout(height=700)
     return fig
