@@ -113,10 +113,15 @@ if view == 'Daily':
             details = client.get_activity_details(activity_id)
             fig_act = plot_activity_overview(activity,details)
             
-            if isinstance(fig_act, bool):
+            try:
+                if activity['activityType']['typeKey'] != 'running':
+                    st.info('No running event found.')
+                elif isinstance(fig_act, bool):
+                    st.info('No details found.')
+                else:
+                    st.pyplot(fig_act, use_container_width=True)
+            except:
                 st.info('No details found.')
-            else:
-                st.pyplot(fig_act, use_container_width=True)
         else:
             activity = None
             st.info("No activity selected.")            
