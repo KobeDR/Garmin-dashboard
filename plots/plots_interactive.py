@@ -96,7 +96,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     date_ref = f"{year}-{month:02d}-{day:02d}"
     stats = client.get_stats(date_ref)
     fig = make_subplots(rows=2, cols=2, shared_xaxes=True,
-                        vertical_spacing=.12, horizontal_spacing=.08)
+                        vertical_spacing=.12, horizontal_spacing=.03)
     activities = client.get_activities_by_date(date_ref, date_ref)
     try:
         sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
