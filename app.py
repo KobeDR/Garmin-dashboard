@@ -59,8 +59,6 @@ else:
             ['Daily', 'Yearly']
         )
         if view == 'Daily':
-            st.header('Daily')
-
             date = st.date_input(
                 "Date",
                 value=date.today()
