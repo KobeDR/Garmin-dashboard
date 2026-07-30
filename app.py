@@ -29,7 +29,7 @@ with st.sidebar.form("plot_form"):
     st.divider()
     st.header('View')
     view = st.radio(
-        "View",
+        "",
         ['Daily', 'Yearly']
     )
     
