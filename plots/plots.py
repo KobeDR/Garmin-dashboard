@@ -539,7 +539,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     
     ax1.plot(x,y, c= 'red')
-    ax1.fill_between(x,y, alpha=.3, c= 'red')
+    ax1.fill_between(x,y, alpha=.3, color= 'red')
     try:
         sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
         start_sleep = datetime.fromtimestamp(sleep['sleepStartTimestampGMT']/1000) + timedelta(hours = 2)
@@ -583,7 +583,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     
     ax2.plot(x,y, c= 'orange')
-    ax2.fill_between(x,y, alpha=.3, c= 'orange')
+    ax2.fill_between(x,y, alpha=.3, color= 'orange')
     try:
         ax2.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
     except:
