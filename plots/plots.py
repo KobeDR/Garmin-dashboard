@@ -363,34 +363,44 @@ def plot_running_activity_overview(activity,activity_details):
         
         ax4.set_xlabel('Time (seconds)')
 
-        zones = [
-            activity['hrTimeInZone_1'],
-            activity['hrTimeInZone_2'],
-            activity['hrTimeInZone_3'],
-            activity['hrTimeInZone_4'],
-            activity['hrTimeInZone_5']
-        ]
-
-
-        labels = [
-            "Zone 1",
-            "Zone 2",
-            "Zone 3",
-            "Zone 4",
-            "Zone 5"
-        ]
+        
 
         ax_summary.axis("off")
-        
-        avg_pace = f"{int(activity['averageSpeed']**-1 * 1000 // 60)}:{int((1000/activity['averageSpeed']) % 60):02d} min/km"
-        max_pace = f"{int(activity['maxSpeed']**-1 * 1000 // 60)}:{int((1000/activity['maxSpeed']) % 60):02d} min/km"
-        avg_hr = f"{activity['averageHR']} bpm"
-        max_hr = f"{activity['maxHR']} bpm"
-        elev = f"{activity['elevationGain']:.0f} m"
-        vO2MaxValue = f"{activity['vO2MaxValue']:.0f}"
-        calories = f"{activity['calories']:.0f}"
+        try:
+            avg_pace = f"{int(activity['averageSpeed']**-1 * 1000 // 60)}:{int((1000/activity['averageSpeed']) % 60):02d} min/km"
+        except:
+            avg_pace = ""
 
-        duration = str(timedelta(seconds=int(activity["duration"])))
+        try:
+            max_pace = f"{int(activity['maxSpeed']**-1 * 1000 // 60)}:{int((1000/activity['maxSpeed']) % 60):02d} min/km"
+        except:
+            max_pace = ""
+        try:
+            avg_hr = f"{activity['averageHR']} bpm"
+        except:
+            avg_hr = ""        
+        
+        try:
+            max_hr = f"{activity['maxHR']} bpm"
+        except:
+            max_hr = ""  
+        try:
+            elev = f"{activity['elevationGain']:.0f} m"
+        except:
+            elev = "" 
+        try:
+            vO2MaxValue = f"{activity['vO2MaxValue']:.0f}"
+        except:
+            vO2MaxValue = "" 
+        try:
+            calories = f"{activity['calories']:.0f}"
+        except:
+            calories = ""
+
+        try:
+            duration = str(timedelta(seconds=int(activity["duration"])))
+        except:
+            duration = "00:00:00"
 
 
         stats = [
@@ -427,40 +437,94 @@ def plot_running_activity_overview(activity,activity_details):
 
 
         plt.rcParams["font.family"] = "Helvetica"
+        try:
+            zones = [
+                activity['hrTimeInZone_1'],
+                activity['hrTimeInZone_2'],
+                activity['hrTimeInZone_3'],
+                activity['hrTimeInZone_4'],
+                activity['hrTimeInZone_5']
+            ]
 
-        colors = [
-            "#4F7FD9",  # Zone 1
-            "#5DAA68",  # Zone 2
-            "#FF8C1A",  # Zone 3
-            "#D83A34",  # Zone 4
-            "#7E3FA3",  # Zone 5
-        ]
 
-        wedges, texts, autotexts = ax_pie.pie(
-            zones,
-            labels=labels,                 # legend elsewhere
-            colors=colors,
-            startangle=90,
-            counterclock=False,
-            autopct="%1.0f%%",
+            labels = [
+                "Zone 1",
+                "Zone 2",
+                "Zone 3",
+                "Zone 4",
+                "Zone 5"
+            ]
+            colors = [
+                "#4F7FD9",  # Zone 1
+                "#5DAA68",  # Zone 2
+                "#FF8C1A",  # Zone 3
+                "#D83A34",  # Zone 4
+                "#7E3FA3",  # Zone 5
+            ]
 
-            # <-- Move percentages outward
-            pctdistance=0.76,
+            wedges, texts, autotexts = ax_pie.pie(
+                zones,
+                labels=labels,                 # legend elsewhere
+                colors=colors,
+                startangle=90,
+                counterclock=False,
+                autopct="%1.0f%%",
 
-            # Donut
-            wedgeprops={
-                "width":0.42,
-                "edgecolor":"white",
-                "linewidth":2,
-            },
+                # <-- Move percentages outward
+                pctdistance=0.76,
 
-            # <-- White percentages
-            textprops={
-                "color":"white",
-                "fontsize":10,
-                "fontweight":"bold",
-            },
-        )
+                # Donut
+                wedgeprops={
+                    "width":0.42,
+                    "edgecolor":"white",
+                    "linewidth":2,
+                },
+
+                # <-- White percentages
+                textprops={
+                    "color":"white",
+                    "fontsize":10,
+                    "fontweight":"bold",
+                },
+            )
+        except:
+            zones = [
+                100
+            ]
+
+
+            labels = [
+                "No data"
+            ]
+            colors = [
+                "grey",  # Zone 5
+            ]
+
+            wedges, texts, autotexts = ax_pie.pie(
+                zones,
+                labels=labels,                 # legend elsewhere
+                colors=colors,
+                startangle=90,
+                counterclock=False,
+                autopct="%1.0f%%",
+
+                # <-- Move percentages outward
+                pctdistance=0.76,
+
+                # Donut
+                wedgeprops={
+                    "width":0.42,
+                    "edgecolor":"white",
+                    "linewidth":2,
+                },
+
+                # <-- White percentages
+                textprops={
+                    "color":"white",
+                    "fontsize":10,
+                    "fontweight":"bold",
+                },
+            )
         ax_pie.legend(
             wedges,
             labels,
