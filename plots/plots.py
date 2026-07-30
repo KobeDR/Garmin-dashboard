@@ -503,6 +503,8 @@ def plot_running_activity_overview(activity,activity_details):
     
     
 def plot_day_overview2(df_hr, df_stress, year, month, day, client):
+    xlims_min = []
+    xlims_max = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     mon = month_names[month-1]
     fig = plt.figure(figsize=(14, 8), dpi=200)
@@ -538,10 +540,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     x = [i for i,j in zip(x, y) if np.isfinite(j)]
     x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
     y = [i for i in y if np.isfinite(i)]
-    xlim_min = x[0]
-    xlim_max = x[-1]
-    for ax in (ax1, ax2, ax3):
-        ax.set_xlim([xlim_min,xlim_max])
+    xlims_min.append(x[0])
+    xlims_max.append(x[-1])
     
     
     ax1.plot(x,y, c= 'red')
@@ -590,7 +590,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
     y = [i for i in y if np.isfinite(i)]
     
-    
+    xlims_min.append(x[0])
+    xlims_max.append(x[-1])
     ax2.plot(x,y, c= 'orange')
     ax2.fill_between(x,y, alpha=.3, color= 'orange')
     try:
@@ -622,6 +623,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         steps_df = pd.DataFrame(steps)
         steps_df['startGMT'] = pd.to_datetime(steps_df['startGMT'])+ timedelta(hours = 2)
         steps_df['steps_cumsum'] = steps_df['steps'].cumsum()
+        xlims_min.append(steps_df['startGMT'].iloc[0])
+        xlims_max.append(steps_df['startGMT'].iloc[-1])
         ax3.plot(steps_df['startGMT'],steps_df['steps_cumsum'], c= 'blue')
         ax3.fill_between(steps_df['startGMT'],steps_df['steps_cumsum'], color="blue", alpha=0.3)
         try:
@@ -644,6 +647,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         bb = client.get_body_battery(date_ref)
         bb_df = pd.DataFrame(bb[0]['bodyBatteryValuesArray'], columns = ['Timepoint', 'BB'])
         bb_df['Timepoint'] = [datetime.fromtimestamp(i/1000) + timedelta(hours = 2) for i in bb_df['Timepoint']]
+        xlims_min.append(bb_df['Timepoint'].iloc[0])
+        xlims_max.append(bb_df['Timepoint'].iloc[-1])
         ax4.plot(bb_df['Timepoint'],bb_df['BB'], color= 'purple')
         ax4.fill_between(bb_df['Timepoint'],bb_df['BB'], color= 'purple', alpha = 0.3)
         try:
@@ -661,7 +666,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     except:
         print('Body battery skipped.')
     
-    
+    for ax in (ax1, ax2, ax3, ax4):
+        ax.set_xlim([np.min(xlims_min), np.max(xlims_max)])
     ax4.set_ylabel('Time')
     
     fig.suptitle(f"{day} {mon} {year}")
