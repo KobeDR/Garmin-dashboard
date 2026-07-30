@@ -546,7 +546,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     ymin = pd.Series(y).quantile(0.01)
     ax1.set_ylim(ymin*0.95, ymax * 1.05)
     try:
-        sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
+        all_sleep = client.get_sleep_data(date_ref)
+        sleep = all_sleep['dailySleepDTO']
         start_sleep = datetime.fromtimestamp(sleep['sleepStartTimestampGMT']/1000) + timedelta(hours = 2)
         end_sleep = datetime.fromtimestamp(sleep['sleepEndTimestampGMT']/1000) + timedelta(hours = 2)
         ax1.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
@@ -672,7 +673,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
     
     try:
-        sleep_overall = f"{sleep['dailySleepDTO']['sleepScores']['overall']['value']} - {sleep['dailySleepDTO']['sleepScores']['overall']['qualifierKey']}"
+        sleep_overall = f"{sleep['sleepScores']['overall']['value']} - {sleep['sleepScores']['overall']['qualifierKey']}"
     except:
         sleep_overall = ""
     try:
@@ -682,15 +683,15 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     except:
         sleep_time = ""
     try:
-        sleep_awakecount = sleep['dailySleepDTO']['sleepScores']['awakeCount']['qualifierKey']
+        sleep_awakecount = sleep['sleepScores']['awakeCount']['qualifierKey']
     except:
         sleep_awakecount=""
     try:
-        sleep_restlessness = sleep['dailySleepDTO']['sleepScores']['restlessness']['qualifierKey']
+        sleep_restlessness = sleep['sleepScores']['restlessness']['qualifierKey']
     except:
         sleep_restlessness = ""
     try:
-        sleep_stress = sleep['dailySleepDTO']['sleepScores']['stress']['qualifierKey']
+        sleep_stress = sleep['sleepScores']['stress']['qualifierKey']
     except:
         sleep_stress = ""
     try:
@@ -708,7 +709,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
         
     stats = [
-        ("Average HR", avg_hr),
+        ("Average HR", round(avg_hr, 2)),
         ("Max HR", max_hr),
         ('Active calories burned', activekcal),
         ("Overall sleep score", sleep_overall),
@@ -754,9 +755,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ]
             
         zones = [
-                sleep['remPercentage']['value'],
-                sleep['lightPercentage']['value'],
-                sleep['deepPercentage']['value'],
+                all_sleep['remPercentage']['value'],
+                all_sleep['lightPercentage']['value'],
+                all_sleep['deepPercentage']['value'],
         ]
         
         
