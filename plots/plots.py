@@ -73,7 +73,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
         2,
         2,
-        figsize=(12,6),dpi = 1000,
+        figsize=(14, 8),dpi = 1000,
         sharex = True
     )
     if month<10:
