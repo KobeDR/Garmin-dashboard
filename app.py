@@ -1,6 +1,6 @@
 import streamlit as st
 from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_client
-from plots.plots import plot_year_overview, plot_day_overview,plot_day_overview2, plot_running_activity_overview
+from plots.plots_interactive import plot_year_overview,plot_day_overview2, plot_running_activity_overview
 import datetime
 from datetime import date
 current_year = datetime.datetime.now().year
