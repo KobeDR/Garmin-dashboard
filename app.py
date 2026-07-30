@@ -84,14 +84,14 @@ else:
     
     if view == 'Daily':
         if month<10:
-            month2 = f'0{month}'
+            month_reformatted = f'0{month}'
         else:
-            month2 = month
+            month_reformatted = month
         if day<10:
-            day2 = f'0{day}'
+            day_reformatted = f'0{day}'
         else:
-            day2 = day
-        date_ref = f"{year}-{month2}-{day2}"
+            day_reformatted = day
+        date_ref = f"{year}-{month_reformatted}-{day_reformatted}"
         activities = client.get_activities_by_date(date_ref, date_ref)   
         activity_names = [
         f"{a['startTimeLocal'][11:16]} - {a['activityType']['typeKey']} - {a['activityName']}"
@@ -111,12 +111,6 @@ else:
             
             
             with activity_tab:
-                if month<10:
-                    month = f'0{month}'
-                if day<10:
-                    day = f'0{day}'
-                date_ref = f"{year}-{month}-{day}"
-                
                 if len(activity_names)>0:
                     selected = st.sidebar.selectbox(
                     "Activity",
@@ -150,7 +144,7 @@ else:
         else:
             df_hr = get_day_hr_data(date, client, email)
             df_stress = get_day_stress_data(date, client, email)
-            fig_day = plot_day_overview2(df_hr, df_stress, year, month, day, client)
+            fig_day = plot_day_overview2(df_hr, df_stress, year, month_reformatted, day_reformatted, client)
             st.pyplot(fig_day, use_container_width=True)      
             
     else:
