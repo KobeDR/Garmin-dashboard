@@ -538,6 +538,10 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     x = [i for i,j in zip(x, y) if np.isfinite(j)]
     x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
     y = [i for i in y if np.isfinite(i)]
+    xlim_min = x[0]
+    xlim_max = x[-1]
+    for ax in (ax1, ax2, ax3):
+        ax.set_xlim([xlim_min,xlim_max])
     
     
     ax1.plot(x,y, c= 'red')
