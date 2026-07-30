@@ -87,6 +87,53 @@ def plot_year_overview(df, year):
     return fig
 
 
+def plot_running_activity_overview(activity,activity_details):
+    if not activity_details['detailsAvailable']:
+        return False
+    di = {}
+    metric_keys = {'directSpeed': 'mpkm', 'sumDuration': 'durationSeconds', 'directElevation': 'ElevationMeters',
+                   'directHeartRate': 'HR', 'directDoubleCadence': 'Cadence', 'directAirTemperature': 'Temp'}
+    for key, target in metric_keys.items():
+        try:
+            metric_index = [item['metricsIndex'] for item in activity_details['metricDescriptors'] if item['key'] == key][0]
+            values = [item['metrics'][metric_index] for item in activity_details['activityDetailMetrics']]
+            di[target] = [1000/(value*60) if value*60 > 0 else np.nan for value in values] if key == 'directSpeed' else values
+        except Exception: print('Fail')
+    df = pd.DataFrame(di)
+    fig = make_subplots(rows=4, cols=2, shared_xaxes=True,
+                        specs=[[{}, {'type':'domain'}], [{}, {'type':'domain'}], [{}, {'type':'domain'}], [{}, {'type':'xy'}]],
+                        vertical_spacing=.07, horizontal_spacing=.12)
+    duration = df['durationSeconds']
+    for row, column, color, label in ((1, 'HR', 'red', 'HR (bpm)'), (2, 'mpkm', 'blue', 'Speed (min/km)'),
+                                       (3, 'Cadence', 'orange', 'Cadence (spm)'), (4, 'Temp', 'purple', 'Temperature (Celsius)')):
+        try:
+            _add_timeseries(fig, duration, df[column], row, color, label, True)
+            fig.update_yaxes(title_text=label, range=[df[column].quantile(.01)*.95, df[column].quantile(.99)*1.05], row=row, col=1)
+        except Exception:
+            fig.update_yaxes(range=[0, 100], title_text=label, row=row, col=1); print(f'Skipping {column}')
+        try:
+            fig.add_trace(go.Scatter(x=duration, y=df['ElevationMeters'], mode='lines', line=dict(color='rgba(100,100,100,0)'),
+                                     fill='tozeroy', fillcolor='rgba(128,128,128,.3)', showlegend=False), row=row, col=1)
+        except Exception: pass
+    fig.update_xaxes(title_text='Time (seconds)', row=4, col=1)
+    try: zones = [activity[f'hrTimeInZone_{i}'] for i in range(1, 6)]; labels = [f'Zone {i}' for i in range(1, 6)]; colors = ['#4F7FD9','#5DAA68','#FF8C1A','#D83A34','#7E3FA3']
+    except Exception: zones, labels, colors = [100], ['No data'], ['grey']
+    fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors),
+                         textinfo='percent', textfont=dict(color='white'), name='HR Zones'), row=1, col=2)
+    values = []
+    for label, key, formatter in [('Average pace', 'averageSpeed', lambda v: f"{int(1000/v//60)}:{int((1000/v)%60):02d} min/km"),
+                                  ('Max pace', 'maxSpeed', lambda v: f"{int(1000/v//60)}:{int((1000/v)%60):02d} min/km"),
+                                  ('Average HR', 'averageHR', lambda v: f'{round(v)} bpm'), ('Max HR', 'maxHR', lambda v: f'{round(v)} bpm'),
+                                  ('Elevation gain', 'elevationGain', lambda v: f'{v:.0f} m'), ('vO2Max', 'vO2MaxValue', lambda v: f'{v:.0f}'),
+                                  ('Calories burned', 'calories', lambda v: f'{v:.0f}')]:
+        try: values.append(f'<b>{label}</b>: {formatter(activity[key])}')
+        except Exception: values.append(f'<b>{label}</b>:')
+    fig.add_annotation(text='<br>'.join(values), x=.84, y=.13, xref='paper', yref='paper', showarrow=False, align='left')
+    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:10px'>Total Time</span>", x=.75, y=.75, xref='paper', yref='paper', showarrow=False)
+    fig.update_layout(template='plotly_white', width=1600, height=700, showlegend=False,
+                      title=dict(text=f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}", x=.5))
+    fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', col=1)
+    return fig
 
 
 def plot_day_overview2(df_hr, df_stress, year, month, day, client):
