@@ -71,7 +71,6 @@ else:
         
 
         else:    
-            st.header('Yearly')
             year_ov = st.number_input(
                 "Year",
                 min_value=2015,
