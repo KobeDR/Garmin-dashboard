@@ -523,6 +523,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
     ax_pie     = fig.add_subplot(gs[:3, 1])
     ax_summary = fig.add_subplot(gs[3, 1])
+    for ax in (ax1, ax2, ax3):
+        ax.tick_params(labelbottom=False)
     if month<10:
         month = f'0{month}'
     if day<10:
@@ -598,9 +600,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
 
     # ax.set_ylim(0, 100)
-    ax1.set_xticks([])
-    ax2.set_xticks([])
-    ax3.set_xticks([])
+
     ax2.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax2.set_ylabel('Stress %')
     ymax = pd.Series(y).quantile(0.99)
