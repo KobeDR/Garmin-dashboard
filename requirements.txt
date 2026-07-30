@@ -6,4 +6,3 @@ scipy
 matplotlib
 plotly
 python-dotenv
-pywaffle
