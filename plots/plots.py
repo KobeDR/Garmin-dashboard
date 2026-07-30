@@ -296,7 +296,6 @@ def plot_running_activity_overview(activity,activity_details):
         ax1.set_ylabel('Speed (min/km)')
         ax1_2 = ax1.twinx()
         ax1_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
-        ax1_2.set_ylabel('Elevation (meters)')
         ax1_2.set_yticks([])
         ax1_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
 
@@ -312,7 +311,6 @@ def plot_running_activity_overview(activity,activity_details):
         ax2.set_ylabel('Cadence (spm)')
         ax2_2 = ax2.twinx()
         ax2_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
-        ax2_2.set_ylabel('Elevation (meters)')
         ax2_2.set_yticks([])
 
         ax2_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
@@ -332,7 +330,6 @@ def plot_running_activity_overview(activity,activity_details):
         ax3_2 = ax3.twinx()
         ax3_2.set_yticks([])
         ax3_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
-        ax3_2.set_ylabel('Elevation (meters)')
 
         
 
@@ -351,7 +348,6 @@ def plot_running_activity_overview(activity,activity_details):
         ax4.set_ylabel('Temperature (Celsius)')
         ax4_2 = ax4.twinx()
         ax4_2.fill_between(df['durationSeconds'], df['ElevationMeters'], color = 'grey', alpha = 0.3)
-        ax4_2.set_ylabel('Elevation (meters)')
         ax4_2.set_yticks([])
         ax4_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
         
