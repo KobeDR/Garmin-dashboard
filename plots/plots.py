@@ -540,6 +540,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     ax1.plot(x,y, c= 'red')
     ax1.fill_between(x,y, alpha=.3, color= 'red')
+    ymax = pd.Series(y).quantile(0.99)
+    ymin = pd.Series(y).quantile(0.01)
+    ax1.set_ylim(ymin*0.95, ymax * 1.05)
     try:
         sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
         start_sleep = datetime.fromtimestamp(sleep['sleepStartTimestampGMT']/1000) + timedelta(hours = 2)
@@ -564,7 +567,6 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     ax1.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax1.set_ylabel('HR (BPM)')
     ax1.grid(alpha=.3)
-    fig.supxlabel('Time')
     
     
     
@@ -596,9 +598,14 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
 
     # ax.set_ylim(0, 100)
-    ax2.tick_params(axis = 'x', labelrotation = 45)
+    ax1.set_xticks([])
+    ax2.set_xticks([])
+    ax3.set_xticks([])
     ax2.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax2.set_ylabel('Stress %')
+    ymax = pd.Series(y).quantile(0.99)
+    ymin = pd.Series(y).quantile(0.01)
+    ax2.set_ylim(ymin*0.95, ymax * 1.05)
     ax2.grid(alpha=.3)
     ax3.grid(alpha=.3)
     ax3.set_ylabel('# Steps')
@@ -650,7 +657,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         print('Body battery skipped.')
     
     
-    ax3.set_ylabel('Time')
+    ax4.set_ylabel('Time')
     try: 
         slp_time = stats['sleepingSeconds']/60/60
         fig.suptitle(f"{day} {mon} {year}\n{'{0:02.0f}:{1:02.0f}'.format(*divmod(slp_time * 60, 60))} hours slept - {round(stats['activeKilocalories'])} active calories burned")
