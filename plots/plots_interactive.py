@@ -96,7 +96,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
     date_ref = f"{year}-{month:02d}-{day:02d}"
     stats = client.get_stats(date_ref)
     fig = make_subplots(rows=2, cols=2, shared_xaxes=True,
-                        vertical_spacing=.12, horizontal_spacing=.03)
+                        vertical_spacing=.12, horizontal_spacing=.08)
     activities = client.get_activities_by_date(date_ref, date_ref)
     try:
         sleep = client.get_sleep_data(date_ref)['dailySleepDTO']
@@ -163,7 +163,7 @@ def plot_running_activity_overview(activity,activity_details):
                         specs=[[{'secondary_y': True}, {'type':'domain', 'rowspan':3}],
                                [{'secondary_y': True}, None],
                                [{'secondary_y': True}, None],
-                               [{'secondary_y': True}, {}]],
+                               [{'secondary_y': True}, {'type':'table'}]],
                         vertical_spacing=.07, horizontal_spacing=.12)
     duration = df['durationSeconds']
     for row, column, color, label in ((1, 'HR', 'red', 'HR (bpm)'), (2, 'mpkm', 'blue', 'Speed (min/km)'),
@@ -197,11 +197,14 @@ def plot_running_activity_overview(activity,activity_details):
                                   ('Calories burned', 'calories', lambda v: f'{v:.0f}')]:
         try: values.append(f'<b>{label}</b>: {formatter(activity[key])}')
         except Exception: values.append(f'<b>{label}</b>:')
-    fig.add_annotation(text='<br>'.join(values), x=pie_center, y=.105, xref='paper', yref='paper', showarrow=False,
-                       align='left', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
-    fig.add_annotation(text='Time in HR Zones', x=pie_center, y=1.015, xref='paper', yref='paper', showarrow=False,
+    fig.add_annotation(text='Time in HR Zones', x=pie_center, y=pie_domain.y[1], xref='paper', yref='paper', showarrow=False,
                        yanchor='bottom', font=dict(size=20, color='#111111'))
-    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:13px'>Total Time</span>", x=pie_center, y=.61, xref='paper', yref='paper', showarrow=False, font=dict(size=18, color='#111111'))
+    fig.add_annotation(text=f"{timedelta(seconds=int(duration.iloc[-1]))}<br><span style='font-size:13px'>Total Time</span>", x=pie_center, y=sum(pie_domain.y)/2, xref='paper', yref='paper', showarrow=False, font=dict(size=18, color='#111111'))
+    fig.add_trace(go.Table(
+        header=dict(values=[''], height=0, fill_color='white', line_color='white'),
+        cells=dict(values=[values], align='left', height=22, fill_color='white', line_color='white',
+                   font=dict(size=14, color='#111111')),
+    ), row=4, col=2)
     fig.update_layout(template='plotly_white', width=1600, height=700, showlegend=True,
                       font=dict(color='#111111'), legend=dict(x=.985, y=.77, xanchor='left', font=dict(size=14, color='#111111')),
                       paper_bgcolor='white', plot_bgcolor='white',
@@ -218,7 +221,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     mon = month_names[month-1]; date_ref = f"{year}-{month:02d}-{day:02d}"
     stats = client.get_stats(date_ref)
     fig = make_subplots(rows=4, cols=2, shared_xaxes=True,
-                        specs=[[{}, {'type':'domain', 'rowspan':3}], [{}, None], [{}, None], [{}, {}]],
+                        specs=[[{}, {'type':'domain', 'rowspan':3}], [{}, None], [{}, None], [{}, {'type':'table'}]],
                         vertical_spacing=.07, horizontal_spacing=.12)
     activities = client.get_activities_by_date(date_ref, date_ref)
     try:
@@ -254,7 +257,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     fig.add_trace(go.Pie(values=zones, labels=labels, hole=.42, marker=dict(colors=colors),
                          textinfo='percent', textfont=dict(color='white', size=16), name='Sleep zones'), row=1, col=2)
     pie_domain = fig.data[-1].domain
-    pie_center = (sum(pie_domain.x) / 2)+0.03
+    pie_center = sum(pie_domain.x) / 2
     summary = []
     try: summary.append(f"<b>Average HR</b>: {round(np.mean(df_hr['HR']))} bpm")
     except Exception: pass
@@ -264,10 +267,13 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     except Exception: pass
     for label, value in [('Active calories burned', stats.get('activeKilocalories')), ('Overall sleep score', sleep.get('sleepScores',{}).get('overall',{}).get('value')), ('Sleep stress', sleep.get('sleepScores',{}).get('stress',{}).get('qualifierKey'))]:
         if value is not None: summary.append(f'<b>{label}</b>: {value}')
-    fig.add_annotation(text='<br>'.join(summary), x=pie_center, y=.105, xref='paper', yref='paper', showarrow=False,
-                       align='left', xanchor='center', yanchor='middle', font=dict(size=14, color='#111111'))
-    fig.add_annotation(text='Sleep analysis', x=pie_center, y=1.015, xref='paper', yref='paper', showarrow=False,
+    fig.add_annotation(text='Sleep analysis', x=pie_center, y=pie_domain.y[1], xref='paper', yref='paper', showarrow=False,
                        yanchor='bottom', font=dict(size=20, color='#111111'))
+    fig.add_trace(go.Table(
+        header=dict(values=[''], height=0, fill_color='white', line_color='white'),
+        cells=dict(values=[summary], align='left', height=22, fill_color='white', line_color='white',
+                   font=dict(size=14, color='#111111')),
+    ), row=4, col=2)
     _daily_layout(fig, f'{day} {mon} {year}')
     fig.update_layout(height=700, showlegend=True, legend=dict(x=.985, y=.77, xanchor='left', font=dict(size=14, color='#111111')),
                       margin=dict(l=60, r=130, t=95, b=60))
