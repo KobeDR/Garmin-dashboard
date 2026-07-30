@@ -25,14 +25,13 @@ with st.sidebar.form("plot_form"):
         type="password"
     )
 
-    generate = st.form_submit_button("Generate plot")
+    generate = st.form_submit_button("Login")
 
 if ((not generate) and (not "initial_press" in st.session_state)):
     st.stop()
 else:
     st.session_state.initial_press = True
 with st.sidebar.form("plot_form1"):
-    st.divider()
     st.header('View')
     view = st.radio(
         "",
