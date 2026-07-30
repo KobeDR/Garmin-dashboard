@@ -25,7 +25,13 @@ with st.sidebar.form("plot_form"):
         type="password"
     )
 
+    generate = st.form_submit_button("Generate plot")
 
+if ((not generate) and (not "initial_press" in st.session_state)):
+    st.stop()
+else:
+    st.session_state.initial_press = True
+with st.sidebar.form("plot_form"):
     st.divider()
     st.header('View')
     view = st.radio(
@@ -53,14 +59,6 @@ with st.sidebar.form("plot_form"):
             value=current_year,
             step=1,
         )
-    
-#     generate = st.form_submit_button("Generate plot")
-
-        
-# if ((not generate) and (not "initial_press" in st.session_state)):
-#     st.stop()
-# else:
-#     st.session_state.initial_press = True
     
 if not email or not password:
     st.info("Please enter your Garmin email and password in the sidebar.")
