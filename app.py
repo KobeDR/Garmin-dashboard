@@ -85,8 +85,12 @@ else:
     if view == 'Daily':
         if month<10:
             month2 = f'0{month}'
+        else:
+            month2 = month
         if day<10:
             day2 = f'0{day}'
+        else:
+            day2 = day
         date_ref = f"{year}-{month2}-{day2}"
         activities = client.get_activities_by_date(date_ref, date_ref)   
         activity_names = [
