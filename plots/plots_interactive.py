@@ -48,7 +48,7 @@ def _daily_layout(fig, title):
                       paper_bgcolor='white', plot_bgcolor='white',
                       margin=dict(l=60, r=60, t=70, b=60))
     fig.update_xaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickformat='%H:%M', tickfont=dict(color='#111111'), title_font=dict(color='#111111'), showline=True, linewidth=1, linecolor='#222222', mirror=True)
-    fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickfont=dict(color='#111111'), title_font=dict(color='#111111'), showline=True, linewidth=1, linecolor='#222222', mirror=True)
+    fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickfont=dict(color='#111111'), title_font=dict(color='#111111'), showline=True, linewidth=1, linecolor='#222222', mirror=True, ticks='outside', ticklen=5, tickwidth=1, tickcolor='#222222')
 
 
 def plot_year_overview(df, year):
@@ -204,12 +204,8 @@ def plot_running_activity_overview(activity,activity_details):
                       margin=dict(l=60, r=190, t=95, b=60),
                       title=dict(text=f"{activity['startTimeLocal']} - {activity['activityType']['typeKey']} - {activity['activityName']}", x=.5, font=dict(color='#111111')))
     fig.update_xaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickfont=dict(color='#111111'), title_font=dict(color='#111111'), showline=True, linewidth=1, linecolor='#222222', mirror=True, col=1)
-    fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickfont=dict(color='#111111'), title_font=dict(color='#111111'), showline=True, linewidth=1, linecolor='#222222', mirror=True, col=1, secondary_y=False)
+    fig.update_yaxes(showgrid=True, gridcolor='rgba(0,0,0,.3)', tickfont=dict(color='#111111'), title_font=dict(color='#111111'), showline=True, linewidth=1, linecolor='#222222', mirror=True, ticks='outside', ticklen=5, tickwidth=1, tickcolor='#222222', col=1, secondary_y=False)
     fig.update_yaxes(showgrid=False, showticklabels=False, showline=True, linewidth=1, linecolor='#222222', mirror=True, col=1, secondary_y=True)
-    fig.add_shape(type='rect', xref='paper', yref='paper', x0=.56, x1=1, y0=.2675, y1=1,
-                  line=dict(color='#222222', width=1), fillcolor='rgba(0,0,0,0)')
-    fig.add_shape(type='rect', xref='paper', yref='paper', x0=.56, x1=1, y0=0, y1=.1975,
-                  line=dict(color='#222222', width=1), fillcolor='rgba(0,0,0,0)')
     return fig
 
 
@@ -269,8 +265,4 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     _daily_layout(fig, f'{day} {mon} {year}')
     fig.update_layout(height=700, showlegend=True, legend=dict(x=1.01, y=.77, font=dict(size=14, color='#111111')),
                       margin=dict(l=60, r=190, t=95, b=60))
-    fig.add_shape(type='rect', xref='paper', yref='paper', x0=.56, x1=1, y0=.2675, y1=1,
-                  line=dict(color='#222222', width=1), fillcolor='rgba(0,0,0,0)')
-    fig.add_shape(type='rect', xref='paper', yref='paper', x0=.56, x1=1, y0=0, y1=.1975,
-                  line=dict(color='#222222', width=1), fillcolor='rgba(0,0,0,0)')
     return fig
