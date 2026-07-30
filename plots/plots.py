@@ -108,7 +108,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
         for activity in activities:
             start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
             end_act = start_act + timedelta(seconds = activity['duration'])
-            ax1.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+            ax1.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
             
     try:
         xs, ys = smooth(x_timestamps, y)
@@ -152,7 +152,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
         for activity in activities:
             start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
             end_act = start_act + timedelta(seconds = activity['duration'])
-            ax2.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+            ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
     try:
         xs, ys = smooth(x_timestamps, y)
         xs = [datetime.fromtimestamp(int(round(i))) + timedelta(hours = 2) for i in xs]
@@ -189,7 +189,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
             for activity in activities:
                 start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
                 end_act = start_act + timedelta(seconds = activity['duration'])
-                ax3.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+                ax3.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
         ax3.set_ylim(0, (steps_df['steps_cumsum'].iloc[-1])+3000)
         ax3.tick_params(axis = 'x', labelrotation = 45)
         ax3.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
@@ -211,7 +211,7 @@ def plot_day_overview(df_hr, df_stress, year, month, day, client):
             for activity in activities:
                 start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
                 end_act = start_act + timedelta(seconds = activity['duration'])
-                ax4.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+                ax4.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
         ax4.tick_params(axis = 'x', labelrotation = 45)
         ax4.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         
@@ -559,7 +559,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         for activity in activities:
             start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
             end_act = start_act + timedelta(seconds = activity['duration'])
-            ax1.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+            ax1.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
             
 
     
@@ -594,7 +594,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         for activity in activities:
             start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
             end_act = start_act + timedelta(seconds = activity['duration'])
-            ax2.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+            ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
 
 
     # ax.set_ylim(0, 100)
@@ -627,7 +627,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
             for activity in activities:
                 start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
                 end_act = start_act + timedelta(seconds = activity['duration'])
-                ax3.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+                ax3.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
         ax3.set_ylim(0, (steps_df['steps_cumsum'].iloc[-1])+3000)
         ax3.tick_params(axis = 'x', labelrotation = 45)
         ax3.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
@@ -649,7 +649,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
             for activity in activities:
                 start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
                 end_act = start_act + timedelta(seconds = activity['duration'])
-                ax4.axvspan(start_act, end_act, color = 'orange', alpha = 0.3)
+                ax4.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
         ax4.tick_params(axis = 'x', labelrotation = 45)
         ax4.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         
