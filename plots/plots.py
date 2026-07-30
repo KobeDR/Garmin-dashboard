@@ -554,6 +554,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ymin = pd.Series(y).quantile(0.01)
         ax1.set_ylim(ymin*0.95, ymax * 1.05)
     except:
+        ax1.set_ylim(0, 100)
         print('Fail')
     try:
         all_sleep = client.get_sleep_data(date_ref)
@@ -622,6 +623,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ymin = pd.Series(y).quantile(0.01)
         ax2.set_ylim(ymin*0.95, ymax * 1.05)
     except:
+        ax2.set_ylim(0, 100)
         print('Fail')
     ax2.grid(alpha=.3)
     ax3.grid(alpha=.3)
@@ -652,6 +654,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ax3.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         
     except:
+        ax3.set_ylim(0, 100)
         print('Steps skipped.')
         
     try:
@@ -675,6 +678,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ax4.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
         
     except:
+        ax4.set_ylim(0, 100)
         print('Body battery skipped.')
     try:
         for ax in (ax1, ax2, ax3, ax4):
