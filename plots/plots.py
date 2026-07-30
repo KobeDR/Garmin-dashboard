@@ -243,6 +243,17 @@ def plot_running_activity_overview(activity,activity_details):
             seconds = 0
 
         return f"{minutes}:{seconds:02d}"
+    
+    def pace_formatter_fun(x):
+            minutes = int(x)
+            seconds = int(round((x - minutes) * 60))
+    
+            # Handle rounding (e.g. 5.999 -> 6:00)
+            if seconds == 60:
+                minutes += 1
+                seconds = 0
+    
+            return f"{minutes}:{seconds:02d}"
     if activity_details['detailsAvailable']:
         di = {}
         speed_index = [i['metricsIndex']  for i in activity_details['metricDescriptors'] if i['key'] == 'directSpeed'][0]
@@ -276,7 +287,8 @@ def plot_running_activity_overview(activity,activity_details):
         ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
         ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
 
-        ax_pie = fig.add_subplot(gs[:, 1])    # spans all rows
+        ax_summary = fig.add_subplot(gs[:2, 1])   # top half
+        ax_pie     = fig.add_subplot(gs[2:, 1])    # spans all rows
         
         for ax in (ax1, ax2, ax3):
             ax.tick_params(labelbottom=False)
@@ -349,11 +361,18 @@ def plot_running_activity_overview(activity,activity_details):
         ax4_2.set_ylabel('Elevation (meters)')
         ax4_2.set_ylim(0, np.max(df['ElevationMeters'])+20)
         
+        # zones = [
+        #     (df["HR"] < 120).sum(),
+        #     ((df["HR"] >= 120) & (df["HR"] < 140)).sum(),
+        #     ((df["HR"] >= 140) & (df["HR"] < 160)).sum(),
+        #     (df["HR"] >= 160).sum(),
+        # ]
         zones = [
-            (df["HR"] < 120).sum(),
-            ((df["HR"] >= 120) & (df["HR"] < 140)).sum(),
-            ((df["HR"] >= 140) & (df["HR"] < 160)).sum(),
-            (df["HR"] >= 160).sum(),
+            activity['hrTimeInZone_1'],
+            activity['hrTimeInZone_2'],
+            activity['hrTimeInZone_3'],
+            activity['hrTimeInZone_4'],
+            activity['hrTimeInZone_5']
         ]
 
         labels = [
@@ -362,6 +381,63 @@ def plot_running_activity_overview(activity,activity_details):
             "140-160",
             ">160",
         ]
+
+        ax_summary.axis("off")
+        
+        avg_pace = f"{pace_formatter_fun(activity['averageSpeed'])} /km"
+        avg_hr = f"{activity['averageHR']} bpm"
+        max_hr = f"{activity['maxHR']} bpm"
+        elev = f"{activity['elevationGain']:.0f} m"
+
+        duration = str(timedelta(seconds=int(activity["duration"])))
+
+        ax_summary.text(
+            0.5, 0.95,
+            duration,
+            ha="center",
+            va="top",
+            fontsize=24,
+            fontweight="bold",
+        )
+
+        ax_summary.text(
+            0.5, 0.83,
+            "Moving Time",
+            ha="center",
+            fontsize=11,
+            color="gray",
+        )
+
+        stats = [
+            ("Avg Pace", avg_pace),
+            ("Avg HR", avg_hr),
+            ("Max HR", max_hr),
+            ("Elev Gain", elev),
+        ]
+
+        y = 0.62
+
+        for label, value in stats:
+
+            ax_summary.text(
+                0.05,
+                y,
+                label,
+                fontsize=11,
+                color="gray",
+            )
+
+            ax_summary.text(
+                0.95,
+                y,
+                value,
+                ha="right",
+                fontsize=12,
+                fontweight="bold",
+            )
+
+            y -= 0.13
+
 
 
         plt.rcParams["font.family"] = "Helvetica"
