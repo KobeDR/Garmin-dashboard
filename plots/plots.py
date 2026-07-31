@@ -121,7 +121,7 @@ def plot_year_overview2(df, year, client):
     except:
         avg_steps = "" 
     try:
-        vO2MaxValue = f"{round([i for i in vo2max_list if str(i) != 'nan'][-1])}"
+        vO2MaxValue = f"{round([i for i in vo2max_list if str(i) != 'nan'][0])}"
     except:
         vO2MaxValue = "" 
     try:
