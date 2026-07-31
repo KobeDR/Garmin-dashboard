@@ -133,13 +133,10 @@ def plot_year_overview2(df, year, client):
             ax.axvspan(start, end, color = 'gray', alpha = 0.3)
         try:
             xs, ys = smooth(x, y)
-            ax.plot(xs, ys, c = 'red')
+            ax.plot(xs, ys, c = 'black')
         except:
             print('Smoothing skipped')
-        ax.axhline(
-            np.mean(y),
-            ls="--", c = 'blue'
-        )
+
         if("Battery" in metric) or ("Perc" in metric):
             ax.set_ylim(0, 100)
         ax.set_xlim(0, df.shape[0])
