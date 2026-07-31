@@ -153,6 +153,6 @@ else:
                 ])[0]
         with year_tab:
             df = get_year_data(year_ov, client, email)
-            fig = plot_year_overview2(df, year_ov)
+            fig = plot_year_overview2(df, year_ov, client)
             st.pyplot(fig,use_container_width=True,dpi=500,bbox_inches="tight")
 

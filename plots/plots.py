@@ -72,9 +72,23 @@ def plot_year_overview(df, year):
 
     return fig
 
-def plot_year_overview2(df, year):
+def plot_year_overview2(df, year, client):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     grey_months = ['Feb', 'Apr', 'June', 'Aug', 'Oct', 'Dec']
+    activities = client.get_activities_by_date(f"{year}-01-01", f"{year}-12-31")
+    running_dist = 0
+    vo2max_list = []
+    num_of_activities = len(activities)
+    activityTypes = []
+    for activity in activities:
+        try:
+            activityTypes.append(activity['activityType']['typeKey'])
+            if activity['activityType']['typeKey'] == 'running':
+                vo2max_list.append(activity['vO2MaxValue'])
+                running_dist+= activity['distance']
+        except:
+            continue
+    
     plt.rcParams['font.family'] = 'sans-serif'
     plt.rcParams['font.sans-serif'] = 'Inter'
 
@@ -137,7 +151,207 @@ def plot_year_overview2(df, year):
         ax.set_ylabel(title)
 
         ax.grid(alpha=.3)
-    fig.supxlabel('Time')
+    ax4.set_xlabel('Time')
+    
+    ax_summary.axis("off")
+    try:
+        avg_resthr = f"{round(np.mean([i for i in df['restingHeartRate'] if i >0]))} bpm"
+    except:
+        avg_resthr = ""
+
+    try:
+        avg_bb = f"{round(np.mean([i for i in df['bodyBatteryHighestValue'] if i >0]))} %"
+    except:
+        avg_bb = ""
+    try:
+        avg_sleeping_time = f"{round(np.mean([i/60/60 for i in df['sleepingSeconds'] if i >0]))} h"
+    except:
+        avg_sleeping_time = ""        
+    
+    try:
+        avg_active_time = f"{round(np.mean([(i+j)/60 for i,j in zip(df['highlyActiveSeconds'], df['activeSeconds']) if ((i >0) or (j>0))]))} min"
+    except:
+        avg_active_time = ""
+    try:
+        avg_steps = f"{round(np.mean([i for i in df['totalSteps'] if i >0]))}"
+    except:
+        avg_steps = "" 
+    try:
+        vO2MaxValue = f"{vo2max_list[-1]}"
+    except:
+        vO2MaxValue = "" 
+    try:
+        calories = f"{round(np.mean([i for i in df['totalKilocalories'] if i >0]))}"
+    except:
+        calories = ""
+    if num_of_activities>0:
+        num_activities = f"{num_of_activities}"
+    else:
+        num_activities= ""
+    
+    if running_dist >0:
+        run_dist= f"{round(running_dist/1000)} km"
+    else:
+        run_dist = ""
+
+
+    stats = [
+        ("Average rest HR", avg_resthr),
+        ("Average waking body battery", avg_bb),
+        ("Average sleeping time", avg_sleeping_time),
+        ("Average active time", avg_active_time),
+        ("Average steps", avg_steps),
+        ('Average calories', calories),
+        ('# Activities', num_activities),
+        ('Total running distance', run_dist),
+        ('VO2Max', vO2MaxValue),
+    ]
+
+    y = 0.9
+
+    for label, value in stats:
+
+        ax_summary.text(
+            0.2,
+            y,
+            label,
+            fontsize=11,
+            color="gray",
+        )
+
+        ax_summary.text(
+            0.7,
+            y,
+            value,
+            fontsize=12,
+        )
+
+        y -= 0.2
+
+
+    plt.rcParams['font.family'] = 'sans-serif'
+
+    plt.rcParams['font.sans-serif'] = 'Inter'
+
+    # Optional: Ensure minus signs render correctly with custom fonts
+    plt.rcParams['axes.unicode_minus'] = False
+    try:
+        activity_names = [i.title() for i in list(pd.Series(activityTypes).value_counts().index)]
+        zones = []
+        for nam in activity_names:
+            zones.append(len([i for i in activityTypes if i.title() == nam]))
+
+        labels = activity_names
+
+        colors = [
+            "#636EFA",  # Blue
+            "#EF553B",  # Red
+            "#00CC96",  # Green
+            "#AB63FA",  # Purple
+            "#FFA15A",  # Orange
+            "#19D3F3",  # Cyan
+            "#FF6692",  # Pink
+            "#B6E880",  # Lime
+            "#FF97FF",  # Magenta
+            "#FECB52",  # Yellow
+        ]
+
+        wedges, texts, autotexts = ax_pie.pie(
+            zones,
+            labels=labels,                 # legend elsewhere
+            colors=colors,
+            startangle=90,
+            counterclock=False,
+            autopct="%1.0f%%",
+
+            # <-- Move percentages outward
+            pctdistance=0.76,
+
+            # Donut
+            wedgeprops={
+                "width":0.42,
+                "edgecolor":"white",
+                "linewidth":2,
+            },
+
+            # <-- White percentages
+            textprops={
+                "color":"white",
+                "fontsize":10,
+                "fontweight":"bold",
+            },
+        )
+    except:
+        zones = [
+            100
+        ]
+
+
+        labels = [
+            "No data"
+        ]
+        colors = [
+            "grey",  # Zone 5
+        ]
+
+        wedges, texts, autotexts = ax_pie.pie(
+            zones,
+            labels=labels,                 # legend elsewhere
+            colors=colors,
+            startangle=90,
+            counterclock=False,
+            autopct="%1.0f%%",
+
+            # <-- Move percentages outward
+            pctdistance=0.76,
+
+            # Donut
+            wedgeprops={
+                "width":0.42,
+                "edgecolor":"white",
+                "linewidth":2,
+            },
+
+            # <-- White percentages
+            textprops={
+                "color":"white",
+                "fontsize":10,
+                "fontweight":"bold",
+            },
+        )
+    ax_pie.legend(
+        wedges,
+        labels,
+        title="Activities",
+        loc="center left",
+        bbox_to_anchor=(1.05, 0.5),
+        frameon=False,
+    )
+
+    # Centre text
+    ax_pie.set_title("Activities")
+    ax_pie.text(
+        0,
+        0.05,
+        str(timedelta(seconds=df['durationSeconds'].iloc[-1])),
+        ha="center",
+        va="center",
+        fontsize=15,
+        fontweight="bold",
+    )
+
+    ax_pie.text(
+        0,
+        -0.12,
+        "Total Time",
+        ha="center",
+        va="center",
+        fontsize=10,
+        color="dimgray",
+    )
+
+    ax_pie.set(aspect="equal")
+    
     fig.suptitle(f'{year}')
 
     plt.tight_layout()

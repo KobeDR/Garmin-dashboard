@@ -97,10 +97,10 @@ def get_year_data(year, _client, email):
                 date = f"{year}-{month}-{day}"
                 try:
                     stats = _client.get_stats(date)
-
                     # Add the date as an explicit column
                     stats["date"] = pd.to_datetime(date)
                     stats["month"] = month
+                    
 
                     rows.append(stats)
 
