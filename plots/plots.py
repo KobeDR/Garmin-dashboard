@@ -614,6 +614,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
             ax.set_xlim(td, nd)
             if ((datetime_now < nd) and (datetime_now > td)):
                 ax.axvline(x = datetime_now, color = 'black', ls = '--', lw = 0.5, label = 'now')
+        plt.legend()
             
         
             
