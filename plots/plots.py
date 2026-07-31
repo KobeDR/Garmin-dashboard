@@ -113,7 +113,7 @@ def plot_year_overview2(df, year, client):
     ax_summary = fig.add_subplot(gs[3, 1])   # top half
 
     for ax, (metric, title, color) in zip(
-        (ax1, ax2, ax3, ax4),METRICS, ['red', 'purple', 'blue', 'orange']):
+        (ax1, ax2, ax3, ax4),METRICS, ('red', 'purple', 'blue', 'orange')):
         months = df['month']
         y = df[metric]
         y = [i if i is not None else np.nan for i in y]
