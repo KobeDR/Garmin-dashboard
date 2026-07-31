@@ -105,15 +105,15 @@ def plot_year_overview2(df, year, client):
         wspace=0.2,
     )
 
-    ax1 = fig.add_subplot(gs[0, 0])
-    ax2 = fig.add_subplot(gs[1, 0], sharex=ax1)
+    ax1 = fig.add_subplot(gs[1, 0])
+    ax2 = fig.add_subplot(gs[0, 0], sharex=ax1)
     ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
     ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
     ax_pie     = fig.add_subplot(gs[:3, 1])
     ax_summary = fig.add_subplot(gs[3, 1])   # top half
 
-    for ax, (metric, title) in zip(
-        (ax1, ax2, ax3, ax4),METRICS):
+    for ax, (metric, title, color) in zip(
+        (ax1, ax2, ax3, ax4),METRICS, ['red', 'purple', 'blue', 'orange']):
         months = df['month']
         y = df[metric]
         y = [i if i is not None else np.nan for i in y]
@@ -122,7 +122,8 @@ def plot_year_overview2(df, year, client):
         y = [i for i in y if np.isfinite(i)]
         
         
-        ax.plot(x,y, alpha=.3, c= 'black')
+        ax.plot(x,y, c= color)
+        ax.fill_between(x, y, color = color, alpha = 0.3)
         for grey_month in grey_months:
             indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == grey_month]
             start = indices[0]
@@ -145,13 +146,14 @@ def plot_year_overview2(df, year, client):
         for mon in month_names:
             indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == mon]
             loc.append(int(round(np.mean(indices))))
-        ax.set_xticks(loc)
-        ax.set_xticklabels(month_names)
-        ax.tick_params(axis = 'x', labelrotation = 45)
+        
         ax.set_ylabel(title)
 
         ax.grid(alpha=.3)
     ax4.set_xlabel('Time')
+    ax4.set_xticks(loc)
+    ax4.set_xticklabels(month_names)
+    ax4.tick_params(axis = 'x', labelrotation = 45)
     
     ax_summary.axis("off")
     try:
