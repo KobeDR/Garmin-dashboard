@@ -63,7 +63,9 @@ def plot_year_overview(df, year):
         ax.tick_params(axis = 'x', labelrotation = 45)
         ax.set_title(title)
         ax.set_ylabel(title)
-
+        ymax = pd.Series(y).quantile(0.99)
+        ymin = pd.Series(y).quantile(0.01)
+        ax.set_ylim(ymin*0.95, ymax * 1.05)
         ax.grid(alpha=.3)
     fig.supxlabel('Time')
     fig.suptitle(f'{year}')
