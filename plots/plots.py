@@ -106,9 +106,9 @@ def plot_year_overview2(df, year, client):
     )
 
     ax1 = fig.add_subplot(gs[1, 0])
-    ax2 = fig.add_subplot(gs[0, 0], sharex=ax1)
-    ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
-    ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
+    ax2 = fig.add_subplot(gs[0, 0])
+    ax3 = fig.add_subplot(gs[2, 0])
+    ax4 = fig.add_subplot(gs[3, 0])
     ax_pie     = fig.add_subplot(gs[:3, 1])
     ax_summary = fig.add_subplot(gs[3, 1])   # top half
     colors = ('red', 'purple', 'blue', 'orange')
@@ -142,7 +142,7 @@ def plot_year_overview2(df, year, client):
         ax.set_xlim(0, df.shape[0])
     
         ax.set_ylabel(title)
-
+        ax.set_xticks([])
         ax.grid(alpha=.3)
     ax4.set_xlabel('Time')
     loc = []
