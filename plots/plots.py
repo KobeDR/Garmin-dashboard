@@ -330,25 +330,6 @@ def plot_year_overview2(df, year, client):
 
     # Centre text
     ax_pie.set_title("Activities")
-    ax_pie.text(
-        0,
-        0.05,
-        str(timedelta(seconds=df['durationSeconds'].iloc[-1])),
-        ha="center",
-        va="center",
-        fontsize=15,
-        fontweight="bold",
-    )
-
-    ax_pie.text(
-        0,
-        -0.12,
-        "Total Time",
-        ha="center",
-        va="center",
-        fontsize=10,
-        color="dimgray",
-    )
 
     ax_pie.set(aspect="equal")
     
