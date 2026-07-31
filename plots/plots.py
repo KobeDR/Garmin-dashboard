@@ -75,7 +75,8 @@ def plot_year_overview(df, year):
 def plot_year_overview2(df, year):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     grey_months = ['Feb', 'Apr', 'June', 'Aug', 'Oct', 'Dec']
-    plt.rcParams['font.sans-serif'] = ['Segoe UI', 'Roboto', 'Inter', 'Arial']
+    plt.rcParams['font.family'] = 'sans-serif'
+    plt.rcParams['font.sans-serif'] = 'Inter'
 
     # Optional: Ensure minus signs render correctly with custom fonts
     plt.rcParams['axes.unicode_minus'] = False
@@ -366,6 +367,7 @@ def plot_running_activity_overview(activity,activity_details):
             y -= 0.2
 
 
+        plt.rcParams['font.family'] = 'sans-serif'
 
         plt.rcParams['font.sans-serif'] = 'Inter'
 
@@ -797,8 +799,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
 
 
+    plt.rcParams['font.family'] = 'sans-serif'
 
-    plt.rcParams['font.sans-serif'] = ['Segoe UI', 'Roboto', 'Inter', 'Arial']
+    plt.rcParams['font.sans-serif'] ='Inter'
 
     # Optional: Ensure minus signs render correctly with custom fonts
     plt.rcParams['axes.unicode_minus'] = False    
