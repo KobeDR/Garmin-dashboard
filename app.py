@@ -6,7 +6,7 @@ from datetime import date
 from streamlit_autorefresh import st_autorefresh
 
 st_autorefresh(
-    interval=15 * 60 * 1000,  # 15 minutes in milliseconds
+    interval=2 * 1000,  # 15 minutes in milliseconds
     key="refresh"
 )
 current_year = datetime.datetime.now().year
