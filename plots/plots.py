@@ -181,7 +181,7 @@ def plot_year_overview2(df, year, client):
         for nam in activity_names:
             zones.append(len([i for i in activityTypes if i.title() == nam]))
 
-        labels = activity_names
+        labels = [i.replace("_", " ") for i in activity_names]
 
         colors = [
             "#2E91E5", "#E15F99", "#1CA71C", "#FB0D0D",
