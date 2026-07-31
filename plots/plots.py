@@ -7,6 +7,7 @@ import pandas as pd
 from analysis.metrics import METRICS
 from analysis.smoothing import smooth
 from datetime import datetime, timedelta
+import io
 
 def plot_year_overview(df, year):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']

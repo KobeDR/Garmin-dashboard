@@ -3,6 +3,12 @@ from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_
 from plots.plots import plot_year_overview,plot_day_overview2, plot_running_activity_overview
 import datetime
 from datetime import date
+from streamlit_autorefresh import st_autorefresh
+
+st_autorefresh(
+    interval=15 * 60 * 1000,  # 15 minutes in milliseconds
+    key="refresh"
+)
 current_year = datetime.datetime.now().year
 
 st.set_page_config(
