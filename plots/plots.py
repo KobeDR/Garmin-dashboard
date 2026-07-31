@@ -610,10 +610,11 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         td = td.replace(minute = 0)
         td = td.replace(second = 0)
         nd = td + timedelta(hours=24)
+        if ((datetime_now < nd) and (datetime_now > td)):
+            ax.vhline(x = datetime_now, color = 'black')
         for ax in (ax1, ax2, ax3, ax4):
             ax.set_xlim(td, nd)
-            if ((datetime_now < nd) and (datetime_now > td)):
-                ax.vhline(x = datetime_now, color = 'black')
+            
     except:
         print('Fail')
     ax4.set_ylabel('Time')
