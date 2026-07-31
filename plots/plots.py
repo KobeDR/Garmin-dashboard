@@ -179,13 +179,13 @@ def plot_year_overview2(df, year, client):
         activity_names = [i.title() for i in list(pd.Series(activityTypes).value_counts().index)]
         zones = []
         total_len = len(activityTypes)
-        percs = []
+        nums = []
         for nam in activity_names:
             len_tmp = len([i for i in activityTypes if i.title() == nam])
-            percs.append(round((len_tmp/total_len)*100, 1))
+            nums.append(len_tmp)
             zones.append(len_tmp)
 
-        labels = [f"{i.replace("_", " ")} ({j}%)" for i,j in zip(activity_names, percs)]
+        labels = [f"{i.replace("_", " ")} ({j})" for i,j in zip(activity_names, nums)]
 
         colors = [
             "#2E91E5", "#E15F99", "#1CA71C", "#FB0D0D",
