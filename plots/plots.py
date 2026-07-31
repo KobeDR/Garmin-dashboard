@@ -8,7 +8,7 @@ from analysis.metrics import METRICS
 from analysis.smoothing import smooth
 from datetime import datetime, timedelta
 import io
-fact = 0.5
+fact = 0.9
 def plot_year_overview(df, year):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     grey_months = ['Feb', 'Apr', 'June', 'Aug', 'Oct', 'Dec']
