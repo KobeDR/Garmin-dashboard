@@ -94,9 +94,9 @@ def plot_year_overview2(df, year):
     ax2 = fig.add_subplot(gs[1, 0], sharex=ax1)
     ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
     ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
-    ax5 = fig.add_subplot(gs[3, 0], sharex=ax1) 
+    ax5 = fig.add_subplot(gs[4, 0], sharex=ax1) 
     ax_pie     = fig.add_subplot(gs[:3, 1])
-    ax_summary = fig.add_subplot(gs[3, 1])   # top half
+    ax_summary = fig.add_subplot(gs[3:, 1])   # top half
 
     for ax, (metric, title) in zip(
         (ax1, ax2, ax3, ax4, ax5),METRICS):
@@ -134,7 +134,6 @@ def plot_year_overview2(df, year):
         ax.set_xticks(loc)
         ax.set_xticklabels(month_names)
         ax.tick_params(axis = 'x', labelrotation = 45)
-        ax.set_title(title)
         ax.set_ylabel(title)
 
         ax.grid(alpha=.3)
