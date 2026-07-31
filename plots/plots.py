@@ -12,6 +12,10 @@ import io
 def plot_year_overview(df, year):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     grey_months = ['Feb', 'Apr', 'June', 'Aug', 'Oct', 'Dec']
+    plt.rcParams['font.sans-serif'] = ['Segoe UI', 'Roboto', 'Inter', 'Arial']
+
+    # Optional: Ensure minus signs render correctly with custom fonts
+    plt.rcParams['axes.unicode_minus'] = False
     fig, axs = plt.subplots(
         5,
         2,
@@ -294,7 +298,10 @@ def plot_running_activity_overview(activity,activity_details):
 
 
 
-        plt.rcParams["font.family"] = "Helvetica"
+        plt.rcParams['font.sans-serif'] = 'Inter'
+
+        # Optional: Ensure minus signs render correctly with custom fonts
+        plt.rcParams['axes.unicode_minus'] = False
         try:
             zones = [
                 activity['hrTimeInZone_1'],
@@ -722,8 +729,10 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
 
 
-    plt.rcParams["font.family"] = "Helvetica"
-    
+    plt.rcParams['font.sans-serif'] = ['Segoe UI', 'Roboto', 'Inter', 'Arial']
+
+    # Optional: Ensure minus signs render correctly with custom fonts
+    plt.rcParams['axes.unicode_minus'] = False    
     
     try:
         colors = [
