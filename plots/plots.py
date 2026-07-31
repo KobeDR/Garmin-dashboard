@@ -9,70 +9,6 @@ from analysis.smoothing import smooth
 from datetime import datetime, timedelta
 import io
 fact = 1
-def plot_year_overview(df, year):
-    month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    grey_months = ['Feb', 'Apr', 'June', 'Aug', 'Oct', 'Dec']
-    plt.rcParams['font.sans-serif'] = ['Segoe UI', 'Roboto', 'Inter', 'Arial']
-
-    # Optional: Ensure minus signs render correctly with custom fonts
-    plt.rcParams['axes.unicode_minus'] = False
-    fig, axs = plt.subplots(
-        5,
-        2,
-        figsize=(12*fact,15*fact),dpi=500,
-        sharex=True
-    )
-
-    for ax, (metric, title) in zip(
-        axs.flat,
-        METRICS
-    ):
-        months = df['month']
-        y = df[metric]
-        y = [i if i is not None else np.nan for i in y]
-        x = list(range(len(y)))
-        x = [i for i,j in zip(x, y) if np.isfinite(j)]
-        y = [i for i in y if np.isfinite(i)]
-        
-        
-        ax.plot(x,y, alpha=.3, c= 'black')
-        for grey_month in grey_months:
-            indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == grey_month]
-            start = indices[0]
-            end = indices[-1]
-            ax.axvspan(start, end, color = 'gray', alpha = 0.3)
-        try:
-            xs, ys = smooth(x, y)
-            ax.plot(xs, ys, c = 'red')
-        except:
-            print('Smoothing skipped')
-        ax.axhline(
-            np.mean(y),
-            ls="--", c = 'blue'
-        )
-        if("Battery" in metric) or ("Perc" in metric):
-            ax.set_ylim(0, 100)
-        ax.set_xlim(0, df.shape[0])
-        ax.set_xticks([])
-        loc = []
-        for mon in month_names:
-            indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == mon]
-            loc.append(int(round(np.mean(indices))))
-        ax.set_xticks(loc)
-        ax.set_xticklabels(month_names)
-        ax.tick_params(axis = 'x', labelrotation = 45)
-        ax.set_title(title)
-        ax.set_ylabel(title)
-        ymax = pd.Series(y).quantile(0.99)
-        ymin = pd.Series(y).quantile(0.01)
-        ax.set_ylim(ymin*0.95, ymax * 1.05)
-        ax.grid(alpha=.3)
-    fig.supxlabel('Time')
-    fig.suptitle(f'{year}')
-
-    plt.tight_layout()
-
-    return fig
 
 def plot_year_overview2(df, year, client):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -139,10 +75,11 @@ def plot_year_overview2(df, year, client):
         except:
             print('Smoothing skipped')
 
-        if("Battery" in metric) or ("Perc" in metric):
-            ax.set_ylim(0, 100)
+
         ax.set_xlim(0, df.shape[0])
-    
+        ymax = pd.Series(y).quantile(0.99)
+        ymin = pd.Series(y).quantile(0.01)
+        ax.set_ylim(ymin*0.95, ymax * 1.05)
         ax.set_ylabel(title)
         ax.set_xticks([])
         ax.grid(alpha=.3)
@@ -246,16 +183,11 @@ def plot_year_overview2(df, year, client):
         labels = activity_names
 
         colors = [
-            "#636EFA",  # Blue
-            "#EF553B",  # Red
-            "#00CC96",  # Green
-            "#AB63FA",  # Purple
-            "#FFA15A",  # Orange
-            "#19D3F3",  # Cyan
-            "#FF6692",  # Pink
-            "#B6E880",  # Lime
-            "#FF97FF",  # Magenta
-            "#FECB52",  # Yellow
+            "#2E91E5", "#E15F99", "#1CA71C", "#FB0D0D",
+            "#DA16FF", "#222A2A", "#B68100", "#750D86",
+            "#EB663B", "#511CFB", "#00A08B", "#FB00D1",
+            "#FC0080", "#B2828D", "#6C7C32", "#778AAE",
+            "#862A16", "#A777F1", "#620042", "#1616A7"
         ]
 
         wedges, texts, autotexts = ax_pie.pie(
