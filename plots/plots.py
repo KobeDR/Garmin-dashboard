@@ -603,7 +603,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ax4.set_ylim(0, 100)
         print('Body battery skipped.')
     now = datetime.now()
-    datetime_now = pd.to_datetime(now)
+    datetime_now = pd.to_datetime(now) + timedelta(hours = 2)
     try:
         td = np.min(xlims_min)
         td = td.replace(hour = 0)
@@ -619,7 +619,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     ax4.set_ylabel('Time')
     try:
         if ((datetime_now < nd) and (datetime_now > td)):
-            fig.suptitle(f"{day} {mon} {year} - {now.hour + 2}:{now.minute}")
+            fig.suptitle(f"{day} {mon} {year} - {now.hour+2}:{now.minute}")
         else:
             fig.suptitle(f"{day} {mon} {year}")
     except:
