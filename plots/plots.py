@@ -140,16 +140,15 @@ def plot_year_overview2(df, year, client):
         if("Battery" in metric) or ("Perc" in metric):
             ax.set_ylim(0, 100)
         ax.set_xlim(0, df.shape[0])
-        ax.set_xticks([])
-        loc = []
-        for mon in month_names:
-            indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == mon]
-            loc.append(int(round(np.mean(indices))))
-        
+    
         ax.set_ylabel(title)
 
         ax.grid(alpha=.3)
     ax4.set_xlabel('Time')
+    loc = []
+    for mon in month_names:
+        indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == mon]
+        loc.append(int(round(np.mean(indices))))
     ax4.set_xticks(loc)
     ax4.set_xticklabels(month_names)
     ax4.tick_params(axis = 'x', labelrotation = 45)
