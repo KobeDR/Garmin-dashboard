@@ -111,9 +111,10 @@ def plot_year_overview2(df, year, client):
     ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
     ax_pie     = fig.add_subplot(gs[:3, 1])
     ax_summary = fig.add_subplot(gs[3, 1])   # top half
-
-    for ax, (metric, title, color) in zip(
-        (ax1, ax2, ax3, ax4),METRICS, ('red', 'purple', 'blue', 'orange')):
+    colors = ('red', 'purple', 'blue', 'orange')
+    color_ind = 0
+    for ax, (metric, title) in zip(
+        (ax1, ax2, ax3, ax4),METRICS):
         months = df['month']
         y = df[metric]
         y = [i if i is not None else np.nan for i in y]
@@ -121,9 +122,10 @@ def plot_year_overview2(df, year, client):
         x = [i for i,j in zip(x, y) if np.isfinite(j)]
         y = [i for i in y if np.isfinite(i)]
         
-        
+        color = colors[color_ind]
         ax.plot(x,y, c= color)
         ax.fill_between(x, y, color = color, alpha = 0.3)
+        color_ind+=1
         for grey_month in grey_months:
             indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == grey_month]
             start = indices[0]
