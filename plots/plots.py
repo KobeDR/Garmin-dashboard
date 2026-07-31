@@ -8,7 +8,7 @@ from analysis.metrics import METRICS
 from analysis.smoothing import smooth
 from datetime import datetime, timedelta
 import io
-
+fact = 2
 def plot_year_overview(df, year):
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     grey_months = ['Feb', 'Apr', 'June', 'Aug', 'Oct', 'Dec']
@@ -19,7 +19,7 @@ def plot_year_overview(df, year):
     fig, axs = plt.subplots(
         5,
         2,
-        figsize=(12,15),dpi = 200,
+        figsize=(12*fact,15*fact),dpi = 200,
         sharex=True
     )
 
@@ -119,7 +119,7 @@ def plot_running_activity_overview(activity,activity_details):
             print('Fail')
         
         df = pd.DataFrame(di)
-        fig = plt.figure(figsize=(16, 7), dpi=200, constrained_layout=True)
+        fig = plt.figure(figsize=(16*fact, 7*fact), dpi=200, constrained_layout=True)
 
         gs = GridSpec(
             4,
@@ -436,7 +436,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     xlims_max = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     mon = month_names[month-1]
-    fig = plt.figure(figsize=(16, 7), dpi=200, constrained_layout=True)
+    fig = plt.figure(figsize=(16*fact, 7*fact), dpi=200, constrained_layout=True)
     
     gs = GridSpec(
         4,
