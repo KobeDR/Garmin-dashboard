@@ -82,7 +82,7 @@ def plot_year_overview2(df, year):
     fig = plt.figure(figsize=(16*fact, 7*fact), dpi=500, constrained_layout=True)
     
     gs = GridSpec(
-        5,
+        4,
         2,
         figure=fig,
         width_ratios=[2, 2],   # left plots wider
@@ -94,12 +94,11 @@ def plot_year_overview2(df, year):
     ax2 = fig.add_subplot(gs[1, 0], sharex=ax1)
     ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
     ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
-    ax5 = fig.add_subplot(gs[4, 0], sharex=ax1) 
     ax_pie     = fig.add_subplot(gs[:3, 1])
-    ax_summary = fig.add_subplot(gs[3:, 1])   # top half
+    ax_summary = fig.add_subplot(gs[3, 1])   # top half
 
     for ax, (metric, title) in zip(
-        (ax1, ax2, ax3, ax4, ax5),METRICS):
+        (ax1, ax2, ax3, ax4),METRICS):
         months = df['month']
         y = df[metric]
         y = [i if i is not None else np.nan for i in y]

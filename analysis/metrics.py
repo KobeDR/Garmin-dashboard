@@ -6,7 +6,5 @@ METRICS = [
 
     ("totalSteps", "# Steps"),
 
-    ("totalDistanceMeters", "Distance (m)"),
-
     ("stressPercentage", "Stress %"),
 ]
