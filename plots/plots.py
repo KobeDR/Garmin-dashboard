@@ -105,6 +105,8 @@ def plot_year_overview2(df, year, client):
         avg_bb = ""
     try:
         hours_st = round(np.mean([i/60/60 for i in df['sleepingSeconds'] if i >0]))
+        if hours_st > np.mean([i/60/60 for i in df['sleepingSeconds'] if i >0]):
+            hours_st = hours_st-1
         minutes_st = round((np.mean([i/60/60 for i in df['sleepingSeconds'] if i >0])-hours_st)*60)
         avg_sleeping_time = f"{hours_st}:{minutes_st}h"
     except:
