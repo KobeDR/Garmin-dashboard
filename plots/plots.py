@@ -603,8 +603,13 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         ax4.set_ylim(0, 100)
         print('Body battery skipped.')
     try:
+        td = np.min(xlims_min)
+        td = td.replace(hour = 0)
+        td = td.replace(minute = 0)
+        td = td.replace(second = 0)
+        nd = td + timedelta(hours=24)
         for ax in (ax1, ax2, ax3, ax4):
-            ax.set_xlim([np.min(xlims_min), np.max(xlims_max)])
+            ax.set_xlim(td, nd)
     except:
         print('Fail')
     ax4.set_ylabel('Time')
