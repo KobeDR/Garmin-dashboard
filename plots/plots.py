@@ -622,7 +622,15 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     ax4.set_ylabel('Time')
     try:
         if ((datetime_now < nd) and (datetime_now > td)):
-            fig.suptitle(f"{day} {mon} {year} - {now.hour+2}:{now.minute}")
+            if (now.hour+2) <10:
+                hour_now = f'0{now.hour+2}'
+            else:
+                hour_now = now.hour+2
+            if now.minute<10:
+                minute_now = f'0{now.minute}'
+            else:
+                minute_now = now.minute
+            fig.suptitle(f"{day} {mon} {year} - {hour_now}:{minute_now}")
         else:
             fig.suptitle(f"{day} {mon} {year}")
     except:
