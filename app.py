@@ -1,6 +1,6 @@
 import streamlit as st
 from data.fetch import get_year_data, get_day_hr_data, get_day_stress_data, get_client
-from plots.plots import plot_year_overview,plot_day_overview2, plot_running_activity_overview
+from plots.plots import plot_year_overview2,plot_day_overview2, plot_running_activity_overview
 import datetime
 from datetime import date
 from streamlit_autorefresh import st_autorefresh
@@ -153,6 +153,6 @@ else:
                 ])[0]
         with year_tab:
             df = get_year_data(year_ov, client, email)
-            fig = plot_year_overview(df, year_ov)
+            fig = plot_year_overview2(df, year_ov)
             st.pyplot(fig,use_container_width=True,dpi=500,bbox_inches="tight")
 

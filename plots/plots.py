@@ -72,7 +72,78 @@ def plot_year_overview(df, year):
 
     return fig
 
+def plot_year_overview2(df, year):
+    month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    grey_months = ['Feb', 'Apr', 'June', 'Aug', 'Oct', 'Dec']
+    plt.rcParams['font.sans-serif'] = ['Segoe UI', 'Roboto', 'Inter', 'Arial']
 
+    # Optional: Ensure minus signs render correctly with custom fonts
+    plt.rcParams['axes.unicode_minus'] = False
+    fig = plt.figure(figsize=(16*fact, 7*fact), dpi=500, constrained_layout=True)
+    
+    gs = GridSpec(
+        5,
+        2,
+        figure=fig,
+        width_ratios=[2, 2],   # left plots wider
+        hspace=0.15,
+        wspace=0.2,
+    )
+
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[1, 0], sharex=ax1)
+    ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
+    ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
+    ax5 = fig.add_subplot(gs[3, 0], sharex=ax1) 
+    ax_pie     = fig.add_subplot(gs[:3, 1])
+    ax_summary = fig.add_subplot(gs[3, 1])   # top half
+
+    for ax, (metric, title) in zip(
+        (ax1, ax2, ax3, ax4, ax5),METRICS):
+        months = df['month']
+        y = df[metric]
+        y = [i if i is not None else np.nan for i in y]
+        x = list(range(len(y)))
+        x = [i for i,j in zip(x, y) if np.isfinite(j)]
+        y = [i for i in y if np.isfinite(i)]
+        
+        
+        ax.plot(x,y, alpha=.3, c= 'black')
+        for grey_month in grey_months:
+            indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == grey_month]
+            start = indices[0]
+            end = indices[-1]
+            ax.axvspan(start, end, color = 'gray', alpha = 0.3)
+        try:
+            xs, ys = smooth(x, y)
+            ax.plot(xs, ys, c = 'red')
+        except:
+            print('Smoothing skipped')
+        ax.axhline(
+            np.mean(y),
+            ls="--", c = 'blue'
+        )
+        if("Battery" in metric) or ("Perc" in metric):
+            ax.set_ylim(0, 100)
+        ax.set_xlim(0, df.shape[0])
+        ax.set_xticks([])
+        loc = []
+        for mon in month_names:
+            indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == mon]
+            loc.append(int(round(np.mean(indices))))
+        ax.set_xticks(loc)
+        ax.set_xticklabels(month_names)
+        ax.tick_params(axis = 'x', labelrotation = 45)
+        ax.set_title(title)
+        ax.set_ylabel(title)
+
+        ax.grid(alpha=.3)
+    fig.supxlabel('Time')
+    fig.suptitle(f'{year}')
+
+    plt.tight_layout()
+
+    return fig
 def plot_running_activity_overview(activity,activity_details):
     def pace_formatter(x, pos):
         minutes = int(x)
