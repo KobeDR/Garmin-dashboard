@@ -84,6 +84,7 @@ def plot_year_overview2(df, year, client):
         ax.set_xticks([])
         ax.grid(alpha=.3)
     ax4.set_xlabel('Time')
+    ax4.set_ylim(0, 100)
     loc = []
     for mon in month_names:
         indices = [i for i,x in enumerate(months) if month_names[int(x)-1] == mon]
