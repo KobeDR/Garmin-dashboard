@@ -611,9 +611,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         td = td.replace(second = 0)
         nd = td + timedelta(hours=24)
         for ax in (ax1, ax2, ax3, ax4):
-                    ax.set_xlim(td, nd)
-        if ((datetime_now < nd) and (datetime_now > td)):
-            ax1.vhline(x = datetime_now, color = 'black')
+            ax.set_xlim(td, nd)
+            if ((datetime_now < nd) and (datetime_now > td)):
+                ax.axvline(x = datetime_now, color = 'black')
             
         
             
