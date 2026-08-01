@@ -747,7 +747,6 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     
     try:
-        y = [active_calories_per_min(i, rhr, weight, age) for i in df_hr['HR']]
         y = [i if i is not None else np.nan for i in y]
         x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_stress['Timepoint']]
         x_timestamps = [int(i)/1000 for i in df_stress['Timepoint']]
@@ -756,6 +755,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
 
         y = [i for i in y if np.isfinite(i)]
+        y = [active_calories_per_min(int(i), rhr, weight, age) for i in y]
         
         try:
             xlims_min.append(x[0])
