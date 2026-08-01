@@ -645,6 +645,23 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     xlims_max = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     mon = month_names[month-1]
+    def active_calories_per_min(hr, resting_hr, weight, age):
+        total = (
+            -55.0969
+            + 0.6309 * hr
+            + 0.1988 * weight
+            + 0.2017 * age
+        ) / 4.184
+
+        resting = (
+            -55.0969
+            + 0.6309 * resting_hr
+            + 0.1988 * weight
+            + 0.2017 * age
+        ) / 4.184
+
+        return max(0, total - resting)
+
     fig = plt.figure(figsize=(16*fact, 7*fact), dpi=500, constrained_layout=True)
     
     gs = GridSpec(
@@ -660,9 +677,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     ax2 = fig.add_subplot(gs[1, 0], sharex=ax1)
     ax3 = fig.add_subplot(gs[2, 0], sharex=ax1)
     ax4 = fig.add_subplot(gs[3, 0], sharex=ax1)
-
     ax_pie     = fig.add_subplot(gs[:3, 1])
     ax_summary = fig.add_subplot(gs[3, 1])
+
     for ax in (ax1, ax2, ax3):
         ax.tick_params(labelbottom=False)
     if month<10:
@@ -670,7 +687,12 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     if day<10:
         day = f'0{day}'
     date_ref = f"{year}-{month}-{day}"
+    weight = client.get_weigh_ins('1999-01-01' ,date_ref)['dailyWeightSummaries'][0]['latestWeight']['weight']/1000
+    
     stats = client.get_stats(date_ref)
+    rhr = stats['restingHeartRate']
+    age = client.get_fitnessage_data(date_ref)['chronologicalAge']
+    
     y = df_hr['HR']
     y = [i if i is not None else np.nan for i in y]
     x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_hr['Timepoint']]
@@ -724,38 +746,41 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     
     
-    
-    y = df_stress['Stress']
-    y = [i if i is not None else np.nan for i in y]
-    x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_stress['Timepoint']]
-    x_timestamps = [int(i)/1000 for i in df_stress['Timepoint']]
-
-    x = [i for i,j in zip(x, y) if np.isfinite(j)]
-    x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
-
-    y = [i for i in y if np.isfinite(i)]
-    
     try:
-        xlims_min.append(x[0])
-        xlims_max.append(x[-1])
+        y = [active_calories_per_min(i, rhr, weight, age) for i in df['HR']]
+        y = [i if i is not None else np.nan for i in y]
+        x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_stress['Timepoint']]
+        x_timestamps = [int(i)/1000 for i in df_stress['Timepoint']]
+
+        x = [i for i,j in zip(x, y) if np.isfinite(j)]
+        x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
+
+        y = [i for i in y if np.isfinite(i)]
+        
+        try:
+            xlims_min.append(x[0])
+            xlims_max.append(x[-1])
+        except:
+            print('Fail')
+        ax2.plot(x,y, c= 'orange')
+        ax2.fill_between(x,y, alpha=.3, color= 'orange')
+        try:
+            ax2.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
+        except:
+            print('Sleep skipped.')
+        if len(activities) > 0:
+            for activity in activities:
+                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
+                end_act = start_act + timedelta(seconds = activity['duration'])
+                ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
     except:
-        print('Fail')
-    ax2.plot(x,y, c= 'orange')
-    ax2.fill_between(x,y, alpha=.3, color= 'orange')
-    try:
-        ax2.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
-    except:
-        print('Sleep skipped.')
-    if len(activities) > 0:
-        for activity in activities:
-            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
-            end_act = start_act + timedelta(seconds = activity['duration'])
-            ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
+        print('Skip active calories')
+        
 
 
 
     ax2.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-    ax2.set_ylabel('Stress %')
+    ax2.set_ylabel('Active calories burned')
     try:
         ymax = pd.Series(y).quantile(0.99)
         ymin = pd.Series(y).quantile(0.01)
