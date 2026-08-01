@@ -688,7 +688,6 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         day = f'0{day}'
     date_ref = f"{year}-{month}-{day}"
     weight = client.get_weigh_ins('1999-01-01' ,date_ref)['dailyWeightSummaries'][0]['latestWeight']['weight']/1000
-    
     stats = client.get_stats(date_ref)
     rhr = stats['restingHeartRate']
     age = client.get_fitnessage_data(date_ref)['chronologicalAge']
@@ -755,7 +754,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
 
         y = [i for i in y if np.isfinite(i)]
-        y = [active_calories_per_min(int(i), rhr, weight, age) for i in y]
+        y = [active_calories_per_min(int(i), rhr, weight, age) if str(i) != 'nan' else pd.nan for i in y]
         
         try:
             xlims_min.append(x[0])
