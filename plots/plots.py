@@ -660,7 +660,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
             + 0.2017 * age
         ) / 4.184
 
-        return max(0, total - resting)
+        return max(0, total)
 
     fig = plt.figure(figsize=(16*fact, 7*fact), dpi=500, constrained_layout=True)
     
