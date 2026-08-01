@@ -746,7 +746,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
 
         y = [i for i in y if np.isfinite(i)]
-        y = pd.Series([active_calories_per_min(int(i), round(np.mean(df_hr['HR'])), weight, age)*2 if str(i) != 'nan' else pd.nan for i in y]).cumsum()
+        y = pd.Series([active_calories_per_min(int(i), weight, age)*2 if str(i) != 'nan' else pd.nan for i in y]).cumsum()
 
         
         try:
