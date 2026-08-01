@@ -645,13 +645,9 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     xlims_max = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     mon = month_names[month-1]
-    def active_calories_per_min(hr, weight, age):
-        total = (
-            -55.0969
-            + 0.6309 * hr
-            + 0.1988 * weight
-            + 0.2017 * age
-        )
+    
+    def active_calories_per_min(he,vo, we, ag):
+        total = (0.634×he + 0.404×vo + 0.394×we + 0.ag - 95.7735) / 4.184
         return max(0, total)
 
     fig = plt.figure(figsize=(16*fact, 7*fact), dpi=500, constrained_layout=True)
@@ -683,6 +679,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     stats = client.get_stats(date_ref)
     rhr = stats['restingHeartRate']
     age = client.get_fitnessage_data(date_ref)['chronologicalAge']
+    vo2max = client.get_activities_by_date('1999-01-01', date_ref)[0]['vO2MaxValue']
     
     y = df_hr['HR']
     y = [i if i is not None else np.nan for i in y]
@@ -746,7 +743,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
         x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
 
         y = [i for i in y if np.isfinite(i)]
-        y = pd.Series([active_calories_per_min(int(i), weight, age)*2 if str(i) != 'nan' else pd.nan for i in y]).cumsum()
+        y = pd.Series([active_calories_per_min(int(i),vo2max, weight, age)*2 if str(i) != 'nan' else pd.nan for i in y]).cumsum()
 
         
         try:
