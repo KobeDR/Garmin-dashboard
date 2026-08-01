@@ -755,6 +755,8 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
 
     y = [i for i in y if np.isfinite(i)]
     y = [active_calories_per_min(int(i), rhr, weight, age) if str(i) != 'nan' else pd.nan for i in y]
+    x = [i for i,j in zip(x, y) if np.isfinite(j)]
+    y = [i for i in y if np.isfinite(i)]
     
     try:
         xlims_min.append(x[0])
