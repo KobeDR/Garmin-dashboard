@@ -647,7 +647,7 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     mon = month_names[month-1]
     
     def active_calories_per_min(he,vo, we, ag):
-        total = (0.634×he + 0.404×vo + 0.394×we + 0.ag - 95.7735) / 4.184
+        total = (0.634×he + 0.404×vo + 0.394×we + 0.271*ag - 95.7735) / 4.184
         return max(0, total)
 
     fig = plt.figure(figsize=(16*fact, 7*fact), dpi=500, constrained_layout=True)
