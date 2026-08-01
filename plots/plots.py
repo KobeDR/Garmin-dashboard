@@ -645,21 +645,13 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     xlims_max = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     mon = month_names[month-1]
-    def active_calories_per_min(hr, resting_hr, weight, age):
+    def active_calories_per_min(hr, weight, age):
         total = (
             -55.0969
             + 0.6309 * hr
             + 0.1988 * weight
             + 0.2017 * age
-        ) / 4.184
-
-        resting = (
-            -55.0969
-            + 0.6309 * resting_hr
-            + 0.1988 * weight
-            + 0.2017 * age
-        ) / 4.184
-
+        )
         return max(0, total)
 
     fig = plt.figure(figsize=(16*fact, 7*fact), dpi=500, constrained_layout=True)
