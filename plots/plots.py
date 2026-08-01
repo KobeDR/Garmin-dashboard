@@ -745,35 +745,35 @@ def plot_day_overview2(df_hr, df_stress, year, month, day, client):
     
     
     
+# try:
+    y = [i if i is not None else np.nan for i in y]
+    x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_stress['Timepoint']]
+    x_timestamps = [int(i)/1000 for i in df_stress['Timepoint']]
+
+    x = [i for i,j in zip(x, y) if np.isfinite(j)]
+    x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
+
+    y = [i for i in y if np.isfinite(i)]
+    y = [active_calories_per_min(int(i), rhr, weight, age) if str(i) != 'nan' else pd.nan for i in y]
+    
     try:
-        y = [i if i is not None else np.nan for i in y]
-        x = [datetime.fromtimestamp(int(i) / 1000) + timedelta(hours = 2) for i in df_stress['Timepoint']]
-        x_timestamps = [int(i)/1000 for i in df_stress['Timepoint']]
-
-        x = [i for i,j in zip(x, y) if np.isfinite(j)]
-        x_timestamps = [i for i,j in zip(x_timestamps, y) if np.isfinite(j)]
-
-        y = [i for i in y if np.isfinite(i)]
-        y = [active_calories_per_min(int(i), rhr, weight, age) if str(i) != 'nan' else pd.nan for i in y]
-        
-        try:
-            xlims_min.append(x[0])
-            xlims_max.append(x[-1])
-        except:
-            print('Fail')
-        ax2.plot(x,y, c= 'orange')
-        ax2.fill_between(x,y, alpha=.3, color= 'orange')
-        try:
-            ax2.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
-        except:
-            print('Sleep skipped.')
-        if len(activities) > 0:
-            for activity in activities:
-                start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
-                end_act = start_act + timedelta(seconds = activity['duration'])
-                ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
+        xlims_min.append(x[0])
+        xlims_max.append(x[-1])
     except:
-        print('Skip active calories')
+        print('Fail')
+    ax2.plot(x,y, c= 'orange')
+    ax2.fill_between(x,y, alpha=.3, color= 'orange')
+    try:
+        ax2.axvspan(start_sleep, end_sleep, color = 'gray', alpha = 0.3)
+    except:
+        print('Sleep skipped.')
+    if len(activities) > 0:
+        for activity in activities:
+            start_act = datetime.strptime(activity['startTimeGMT'], "%Y-%m-%d %H:%M:%S") + timedelta(hours = 2)
+            end_act = start_act + timedelta(seconds = activity['duration'])
+            ax2.axvspan(start_act, end_act, color = 'green', alpha = 0.3)
+# except:
+    print('Skip active calories')
         
 
 
